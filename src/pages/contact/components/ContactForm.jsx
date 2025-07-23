@@ -4,6 +4,8 @@ import Input from '../../../components/ui/Input';
 import Select from '../../../components/ui/Select';
 import { Checkbox } from '../../../components/ui/Checkbox';
 import Icon from '../../../components/AppIcon';
+import { contactApi } from '../../../utils/contactApi';
+import { toast } from 'react-toastify';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -95,9 +97,13 @@ const ContactForm = () => {
 
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      alert('Thank you for your inquiry! We\'ll get back to you within 24 hours.');
+    try {
+      const response = await contactApi.submit(formData);
+      
+      // Show success toast
+      toast.success(response.message || 'Thank you for your inquiry! We\'ll get back to you within 24 hours.');
+      
+      // Reset form
       setFormData({
         name: '',
         email: '',
@@ -110,8 +116,24 @@ const ContactForm = () => {
         newsletter: false,
         terms: false
       });
+      
+      // Clear any existing errors
+      setErrors({});
+      
+    } catch (error) {
+      console.error('Contact form submission error:', error);
+      
+      // Show error toast
+      if (error.message.includes('already submitted')) {
+        toast.error('You have already submitted a contact form recently. Please wait 24 hours before submitting again.');
+      } else if (error.message.includes('Validation failed')) {
+        toast.error('Please check your form data and try again.');
+      } else {
+        toast.error('Failed to submit your inquiry. Please try again later.');
+      }
+    } finally {
       setIsSubmitting(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -224,7 +246,13 @@ const ContactForm = () => {
         </div>
 
         <div className="space-y-4">
-         
+          <Checkbox
+            label="Subscribe to our newsletter for updates and insights"
+            checked={formData.newsletter}
+            onChange={(e) => handleInputChange(e)}
+            name="newsletter"
+            description="Get the latest news about digital trends and our services"
+          />
 
           <Checkbox
             label="I agree to the Terms of Service and Privacy Policy"

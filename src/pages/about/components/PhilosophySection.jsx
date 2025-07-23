@@ -5,38 +5,39 @@ import Image from "../../../components/AppImage";
 const PhilosophySection = () => {
   const [activePhilosophy, setActivePhilosophy] = useState(0);
 
+  // Digital Journey Steps
   const philosophySteps = [
     {
       title: "Discover the Challenge",
       description:
-        "Every great solution begins with understanding the real problem. We dive deep into your business challenges, user needs, and market dynamics.",
+        "Understand your business, goals, and user needs.",
       icon: "Search",
       color: "from-blue-500 to-blue-600",
       illustration:
         "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     },
     {
-      title: "Find the Right Key",
+      title: "Build the Right Solution",
       description:
-        "Not all solutions are created equal. We identify the perfect combination of technology, strategy, and design that unlocks your specific potential.",
+        "Design tailored strategies, apps, or web platforms.",
       icon: "Key",
       color: "from-purple-500 to-purple-600",
       illustration:
         "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=2126&q=80",
     },
     {
-      title: "Unlock Potential",
+      title: "Execute with Impact",
       description:
-        "With the right key in hand, we open doors to new possibilities. Your digital transformation becomes a catalyst for unprecedented growth.",
-      icon: "Unlock",
+        "Develop, launch, and market with precision.",
+      icon: "Zap",
       color: "from-green-500 to-green-600",
       illustration:
         "https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     },
     {
-      title: "Scale with Confidence",
+      title: "Optimize & Scale",
       description:
-        "True success is sustainable success. We build solutions that grow with you, ensuring your digital foundation supports unlimited expansion.",
+        "Analyze performance and evolve continuously.",
       icon: "TrendingUp",
       color: "from-orange-500 to-orange-600",
       illustration:
@@ -44,30 +45,31 @@ const PhilosophySection = () => {
     },
   ];
 
+  // What We Believe In
   const coreBeliefs = [
     {
-      title: "Simplicity is Sophistication",
+      title: "Technology with Strategy",
       description:
-        "The most powerful solutions often appear effortless. We believe in making complex technology feel intuitive and accessible.",
-      icon: "Minimize2",
+        "We blend marketing, design, and development to deliver complete results.",
+      icon: "Layers",
     },
     {
-      title: "Partnership Over Transactions",
+      title: "ROI-First Approach",
       description:
-        "We're not just service providers—we're strategic partners invested in your long-term success and growth.",
+        "Whether it's a campaign or product, it must deliver value.",
+      icon: "BarChart2",
+    },
+    {
+      title: "Partnership Over Projects",
+      description:
+        "We grow only when you grow. Your KPIs become ours.",
       icon: "Users",
     },
     {
-      title: "Innovation with Purpose",
+      title: "Transparency Always",
       description:
-        "Technology for technology's sake isn't innovation. Every feature, every line of code serves a clear business purpose.",
-      icon: "Target",
-    },
-    {
-      title: "Quality is Non-Negotiable",
-      description:
-        "Excellence isn't an accident. It's the result of deliberate choices, rigorous testing, and unwavering attention to detail.",
-      icon: "Award",
+        "Clear reports, open communication, and shared success.",
+      icon: "Eye",
     },
   ];
 
@@ -79,24 +81,21 @@ const PhilosophySection = () => {
           <div className="inline-flex items-center space-x-2 bg-white rounded-full px-6 py-3 mb-6 shadow-lg">
             <Icon name="Lightbulb" size={20} className="text-primary" />
             <span className="text-sm font-medium text-primary">
-              Our Philosophy
+              The Digital Journey
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            The <span className="brand-gradient-text">Key</span> That Unlocks
-            Potential
+            Your Full-Funnel Digital Journey Starts Here
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Our approach isn't just about building digital solutions—it's about
-            finding the perfect key that unlocks your business's unlimited
-            potential for growth and success.
+            We guide you from discovery to growth—combining strategy, technology, and marketing for end-to-end digital success.
           </p>
         </div>
 
         {/* Philosophy Journey */}
         <div className="mb-20">
           <h3 className="text-3xl font-bold text-slate-900 text-center mb-12">
-            Our Digital Transformation Journey
+            Your Digital Journey
           </h3>
 
           {/* Step Navigation */}
@@ -180,7 +179,7 @@ const PhilosophySection = () => {
         {/* Core Beliefs */}
         <div>
           <h3 className="text-3xl font-bold text-slate-900 text-center mb-12">
-            What We Believe In
+            Our Beliefs Drive Our Work
           </h3>
 
           <div className="grid md:grid-cols-2 gap-8">
@@ -204,25 +203,6 @@ const PhilosophySection = () => {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Philosophy CTA */}
-        <div className="text-center mt-16">
-          <div className="bg-white rounded-2xl p-8 shadow-xl border border-slate-200">
-            <h3 className="text-2xl font-bold text-slate-900 mb-4">
-              Ready to Unlock Your Potential?
-            </h3>
-            <p className="text-slate-600 mb-6 max-w-2xl mx-auto">
-              Let's discover the perfect key that will transform your digital
-              challenges into unlimited opportunities for growth.
-            </p>
-            <button
-              className="cta-button px-8 py-3 rounded-lg text-white font-medium hover:shadow-lg transition-all duration-300"
-              onClick={() => (window.location.href = "/contact")}
-            >
-              Start Your Transformation
-            </button>
           </div>
         </div>
       </div>

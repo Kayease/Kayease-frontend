@@ -33,7 +33,7 @@ const ServiceHero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-7xl font-bold text-slate-900 mb-6 leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight px-4"
           >
             Transform Your
             <span className="block brand-gradient-text">Digital Vision</span>
@@ -44,7 +44,7 @@ const ServiceHero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl md:text-2xl text-slate-600 mb-12 max-w-4xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 mb-8 sm:mb-12 max-w-xl sm:max-w-2xl lg:max-w-4xl mx-auto leading-relaxed px-4"
           >
             From cutting-edge web applications to mobile experiences that scale,
             we architect digital solutions that unlock your business potential.
@@ -55,15 +55,15 @@ const ServiceHero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-16"
+            className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-12 sm:mb-16 px-4"
           >
             <Button
               variant="default"
               size="lg"
-              className="cta-button text-white font-semibold px-8 py-4"
+              className="cta-button text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:w-auto"
               iconName="Calendar"
               iconPosition="left"
-              iconSize={20}
+              iconSize={18}
               onClick={() => (window.location.href = "/portfolio")}
             >
               View Our Work
@@ -75,7 +75,7 @@ const ServiceHero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-sm sm:max-w-2xl lg:max-w-4xl mx-auto px-4"
           >
             {[
               { number: "200+", label: "Projects Delivered" },
@@ -84,10 +84,10 @@ const ServiceHero = () => {
               { number: "24/7", label: "Support Available" },
             ].map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold brand-gradient-text mb-2">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-bold brand-gradient-text mb-1 sm:mb-2">
                   {stat.number}
                 </div>
-                <div className="text-sm text-slate-600 font-medium">
+                <div className="text-xs sm:text-sm text-slate-600 font-medium leading-tight">
                   {stat.label}
                 </div>
               </div>

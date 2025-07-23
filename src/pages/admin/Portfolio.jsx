@@ -463,9 +463,6 @@ const Portfolio = () => {
                         Status
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                        Completed
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                         Featured
                       </th>
                       <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
@@ -511,9 +508,6 @@ const Portfolio = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {getStatusBadge(portfolio.status)}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                          {formatDate(portfolio.completedDate)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <button

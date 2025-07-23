@@ -1,63 +1,85 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import Image from '../../../components/AppImage';
-import Icon from '../../../components/AppIcon';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import Image from "../../../components/AppImage";
+import Icon from "../../../components/AppIcon";
+import { clientApi } from "../../../utils/clientApi";
 
 const SocialProof = () => {
-  const [hoveredClient, setHoveredClient] = useState(null);
+  const [clients, setClients] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [stats, setStats] = useState({
+    totalClients: 0,
+    recentClients: 0,
+  });
 
-  const clients = [
-    {
-      id: 1,
-      name: 'TechFlow Inc.',
-      logo: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=200&h=100&fit=crop',
-      testimonial: `Kayease transformed our digital presence completely. Their technical expertise and strategic approach resulted in a 245% increase in conversions.`,
-      author: 'Sarah Johnson',
-      position: 'CEO, TechFlow Inc.',
-      rating: 5
-    },
-    {
-      id: 2,
-      name: 'EcoMarket',
-      logo: 'https://images.unsplash.com/photo-1572021335469-31706a17aaef?w=200&h=100&fit=crop',
-      testimonial: `The mobile app they developed exceeded our expectations. 100K+ downloads in the first month with a 4.8-star rating.`,
-      author: 'Michael Chen',
-      position: 'Founder, EcoMarket',
-      rating: 5
-    },
-    {
-      id: 3,
-      name: 'FinanceHub',
-      logo: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=200&h=100&fit=crop',
-      testimonial: `Their financial dashboard solution is incredibly robust. 99.9% accuracy and lightning-fast performance.`,
-      author: 'David Rodriguez',
-      position: 'CTO, FinanceHub',
-      rating: 5
-    },
-    {
-      id: 4,
-      name: 'HealthCare Connect',
-      logo: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=200&h=100&fit=crop',
-      testimonial: `The telemedicine platform they built handles 25K+ consultations with 96% patient satisfaction.`,
-      author: 'Dr. Emily Watson',
-      position: 'Medical Director',
-      rating: 5
-    },
-    {
-      id: 5,
-      name: 'RetailPro',
-      logo: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=200&h=100&fit=crop',
-      testimonial: `Our e-commerce platform saw 180% growth in sales after Kayease's optimization and redesign.`,author: 'James Wilson',position: 'VP Marketing, RetailPro',
-      rating: 5
-    },
-    {
-      id: 6,
-      name: 'StartupLab',logo: 'https://images.unsplash.com/photo-1553484771-371a605b060b?w=200&h=100&fit=crop',testimonial: `From MVP to scale, Kayease has been our trusted development partner. Exceptional quality and support.`,author: 'Lisa Thompson',position: 'Co-founder, StartupLab',
-      rating: 5
-    }
-  ];
+  // Fetch clients and stats on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch clients with a reasonable limit for homepage display
+        const clientsResponse = await clientApi.getClients({
+          limit: 50,
+          sortBy: "createdAt",
+          sortOrder: "desc",
+        });
+
+        // Fetch client statistics
+        const statsResponse = await clientApi.getStatistics();
+
+        setClients(clientsResponse.clients || []);
+        setStats(statsResponse || { totalClients: 0, recentClients: 0 });
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching client data:", err);
+        setError(err.message);
+        setClients([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const duplicatedClients = [...clients, ...clients]; // For continuous scroll
+
+  // Show loading state
+  if (loading) {
+    return (
+      <section className="py-20 lg:py-32 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-text-secondary">
+              Loading our trusted clients...
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <section className="py-20 lg:py-32 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <Icon
+              name="AlertCircle"
+              size={48}
+              className="text-red-500 mx-auto mb-4"
+            />
+            <p className="text-red-600 mb-4">Failed to load client data</p>
+            <p className="text-text-secondary text-sm">{error}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 lg:py-32 bg-white overflow-hidden">
@@ -71,66 +93,57 @@ const SocialProof = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl lg:text-5xl font-bold text-text-primary mb-6">
-            Trusted by <span className="brand-gradient-text">Industry Leaders</span>
+            Trusted by{" "}
+            <span className="brand-gradient-text">Industry Leaders</span>
           </h2>
           <p className="text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed">
-            Join hundreds of satisfied clients who have transformed their businesses with our solutions.
+            {stats.totalClients > 0
+              ? `Join ${stats.totalClients}+ satisfied clients who have transformed their businesses with our solutions.`
+              : "Join our satisfied clients who have transformed their businesses with our solutions."}
           </p>
         </motion.div>
 
         {/* Continuous Scrolling Client Logos */}
-        <div className="relative mb-20">
-          <div className="flex space-x-8 animate-scroll">
-            {duplicatedClients.map((client, index) => (
-              <motion.div
-                key={`${client.id}-${index}`}
-                className="flex-shrink-0 relative group cursor-pointer"
-                onMouseEnter={() => setHoveredClient(client.id)}
-                onMouseLeave={() => setHoveredClient(null)}
-                whileHover={{ scale: 1.05 }}
-              >
-                <div className="w-48 h-24 bg-white rounded-xl shadow-md border border-slate-200 flex items-center justify-center p-4 hover:shadow-lg transition-all duration-300">
-                  <Image
-                    src={client.logo}
-                    alt={client.name}
-                    className="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-                  />
-                </div>
+        {clients.length > 0 && (
+          <div className="relative mb-20">
+            <div className="flex space-x-8 animate-scroll">
+              {duplicatedClients.map((client, index) => (
+                <motion.div
+                  key={`${client._id}-${index}`}
+                  className="flex-shrink-0 relative group"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <div className="w-60 h-44 bg-white rounded-xl shadow-md border border-slate-200 flex items-center justify-center p-4 hover:shadow-lg transition-all duration-300">
+                    <Image
+                      src={client.logo}
+                      alt={client.name}
+                      className="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                    />
+                  </div>
 
-                {/* Testimonial Overlay */}
-                {hoveredClient === client.id && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="absolute top-full left-1/2 transform -translate-x-1/2 mt-4 w-80 bg-white rounded-xl shadow-2xl border border-slate-200 p-6 z-10"
-                  >
-                    <div className="flex items-center mb-3">
-                      {[...Array(client.rating)].map((_, i) => (
-                        <Icon key={i} name="Star" size={16} className="text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-text-secondary text-sm mb-4 leading-relaxed">
-                      "{client.testimonial}"
-                    </p>
-                    <div className="flex items-center">
-                      <div>
-                        <div className="font-semibold text-text-primary text-sm">
-                          {client.author}
-                        </div>
-                        <div className="text-text-secondary text-xs">
-                          {client.position}
-                        </div>
-                      </div>
-                    </div>
-                    {/* Arrow pointing up */}
-                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-slate-200 rotate-45"></div>
-                  </motion.div>
-                )}
-              </motion.div>
-            ))}
+                  {/* Client name tooltip on hover */}
+                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opxcity-100 transition-opacity duration-300 whitespace-nowrap">
+                    {client.name}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Show message when no clients */}
+        {clients.length === 0 && !loading && (
+          <div className="text-center mb-20">
+            <Icon
+              name="Users"
+              size={48}
+              className="text-gray-400 mx-auto mb-4"
+            />
+            <p className="text-text-secondary">
+              No client logos available at the moment.
+            </p>
+          </div>
+        )}
 
         {/* Stats Section */}
         <motion.div
@@ -138,13 +151,29 @@ const SocialProof = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-16"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {[
-            { number: '150+', label: 'Happy Clients', icon: 'Users' },
-            { number: '98%', label: 'Success Rate', icon: 'TrendingUp' },
-            { number: '24/7', label: 'Support', icon: 'Clock' },
-            { number: '5+', label: 'Years Experience', icon: 'Award' }
+            {
+              number: stats.totalClients > 0 ? `${stats.totalClients}+` : "0",
+              label: "Trusted Clients",
+              icon: "Users",
+            },
+            {
+              number: stats.recentClients > 0 ? `${stats.recentClients}+` : "0",
+              label: "New This Month",
+              icon: "TrendingUp",
+            },
+            {
+              number: "24/7",
+              label: "Support",
+              icon: "Clock",
+            },
+            {
+              number: "5+",
+              label: "Years Experience",
+              icon: "Award",
+            },
           ].map((stat, index) => (
             <motion.div
               key={index}
@@ -166,46 +195,6 @@ const SocialProof = () => {
             </motion.div>
           ))}
         </motion.div>
-
-        {/* Featured Testimonials */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-8"
-        >
-          {clients.slice(0, 2).map((client, index) => (
-            <div
-              key={client.id}
-              className="bg-slate-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300"
-            >
-              <div className="flex items-center mb-4">
-                {[...Array(client.rating)].map((_, i) => (
-                  <Icon key={i} name="Star" size={20} className="text-yellow-400 fill-current" />
-                ))}
-              </div>
-              <blockquote className="text-text-secondary text-lg leading-relaxed mb-6">
-                "{client.testimonial}"
-              </blockquote>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mr-4">
-                  <span className="text-white font-bold text-lg">
-                    {client.author.charAt(0)}
-                  </span>
-                </div>
-                <div>
-                  <div className="font-semibold text-text-primary">
-                    {client.author}
-                  </div>
-                  <div className="text-text-secondary text-sm">
-                    {client.position}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </motion.div>
       </div>
 
       <style jsx>{`
@@ -217,11 +206,11 @@ const SocialProof = () => {
             transform: translateX(-50%);
           }
         }
-        
+
         .animate-scroll {
           animation: scroll 30s linear infinite;
         }
-        
+
         .animate-scroll:hover {
           animation-play-state: paused;
         }

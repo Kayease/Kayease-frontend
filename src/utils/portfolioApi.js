@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
 // Helper function to handle API responses
 const handleResponse = async (response) => {
@@ -23,7 +23,7 @@ const fileToBase64 = (file) => {
 const uploadImage = async (file, folder = 'portfolio') => {
   try {
     const base64 = await fileToBase64(file);
-    const response = await fetch(`${API_BASE_URL}/cloudinary/upload`, {
+    const response = await fetch(`${API_BASE_URL}/api/cloudinary/upload`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export const portfolioApi = {
         ]
       };
 
-      const response = await fetch(`${API_BASE_URL}/portfolio`, {
+      const response = await fetch(`${API_BASE_URL}/api/portfolio`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ export const portfolioApi = {
         }
       });
 
-      const response = await fetch(`${API_BASE_URL}/portfolio?${queryParams}`);
+      const response = await fetch(`${API_BASE_URL}/api/portfolio?${queryParams}`);
       return handleResponse(response);
     } catch (error) {
       console.error('Portfolio fetch error:', error);
@@ -126,7 +126,7 @@ export const portfolioApi = {
   // Get single portfolio project
   getById: async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/portfolio/${id}`);
+      const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}`);
       return handleResponse(response);
     } catch (error) {
       console.error('Portfolio fetch error:', error);
@@ -137,7 +137,7 @@ export const portfolioApi = {
   // Get portfolio by slug
   getBySlug: async (slug) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/portfolio/${slug}`);
+      const response = await fetch(`${API_BASE_URL}/api/portfolio/slug/${slug}`);
       return handleResponse(response);
     } catch (error) {
       console.error('Portfolio fetch error:', error);
@@ -189,7 +189,7 @@ export const portfolioApi = {
         removedGalleryImagePublicIds
       };
 
-      const response = await fetch(`${API_BASE_URL}/portfolio/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ export const portfolioApi = {
   // Delete portfolio project
   delete: async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/portfolio/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}`, {
         method: 'DELETE',
       });
 
@@ -221,7 +221,7 @@ export const portfolioApi = {
   // Toggle featured status
   toggleFeatured: async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/portfolio/${id}/featured`, {
+      const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}/featured`, {
         method: 'PATCH',
       });
 
@@ -235,7 +235,7 @@ export const portfolioApi = {
   // Get portfolio statistics
   getStats: async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/portfolio/stats/overview`);
+      const response = await fetch(`${API_BASE_URL}/api/portfolio/stats/overview`);
       return handleResponse(response);
     } catch (error) {
       console.error('Portfolio stats error:', error);
@@ -246,7 +246,7 @@ export const portfolioApi = {
   // Bulk delete
   bulkDelete: async (ids) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/portfolio/bulk/delete`, {
+      const response = await fetch(`${API_BASE_URL}/api/portfolio/bulk/delete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -2,12 +2,12 @@ import React from "react";
 
 const BlogCardSkeleton = () => {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden animate-pulse">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden animate-pulse h-full flex flex-col">
       {/* Image skeleton */}
       <div className="w-full h-48 bg-slate-200"></div>
       
       {/* Content skeleton */}
-      <div className="p-6">
+      <div className="p-6 flex-1 flex flex-col">
         {/* Category and date skeleton */}
         <div className="flex items-center justify-between mb-3">
           <div className="h-4 bg-slate-200 rounded w-24"></div>

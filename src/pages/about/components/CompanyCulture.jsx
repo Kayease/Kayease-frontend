@@ -126,16 +126,13 @@ const CompanyCulture = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center space-x-2 bg-white rounded-full px-6 py-3 mb-6 shadow-lg">
             <Icon name="Heart" size={20} className="text-primary" />
-            <span className="text-sm font-medium text-primary">Company Culture</span>
+            <span className="text-sm font-medium text-primary">Culture</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            Where{' '}
-            <span className="brand-gradient-text">Passion</span>
-            {' '}Meets Purpose
+            Where <span className="brand-gradient-text">Passion</span> Meets Purpose
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Our culture is built on collaboration, innovation, and genuine care for each other's success. 
-            Discover what makes Kayease a place where talented people love to work and grow.
+            Our culture is built on collaboration, innovation, and genuine care for each other's success. Discover what makes Kayease a place where talented people love to work and grow.
           </p>
         </div>
 
@@ -144,7 +141,11 @@ const CompanyCulture = () => {
           <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
             {/* Tab Navigation */}
             <div className="flex flex-wrap border-b border-slate-200">
-              {cultureHighlights.map((tab) => (
+              {[
+                { id: 'workspace', title: 'Our Workspace' },
+                { id: 'events', title: 'Team Events' },
+                { id: 'learning', title: 'Learning & Growth' },
+              ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
@@ -198,14 +199,34 @@ const CompanyCulture = () => {
           </div>
         </div>
 
-        {/* Culture Values */}
+        {/* What Makes Us Different */}
         <div className="mb-20">
           <h3 className="text-3xl font-bold text-slate-900 text-center mb-12">
-            What Makes Us Different
+            Why Businesses Choose Kayease
           </h3>
-          
           <div className="grid md:grid-cols-2 gap-8">
-            {cultureValues.map((value, index) => (
+            {[
+              {
+                title: 'Integrated Services',
+                description: 'Marketing, design, and development—under one roof.',
+                icon: 'Layers',
+              },
+              {
+                title: 'Performance-Driven',
+                description: 'Every decision aligns with your goals.',
+                icon: 'BarChart2',
+              },
+              {
+                title: 'Creative Meets Technical',
+                description: 'Beautiful interfaces backed by robust systems and smart campaigns.',
+                icon: 'Monitor',
+              },
+              {
+                title: 'Flexible Collaboration',
+                description: 'Modular services or full-stack delivery—we adapt to you.',
+                icon: 'Repeat',
+              },
+            ].map((value, index) => (
               <div
                 key={index}
                 className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
@@ -221,14 +242,6 @@ const CompanyCulture = () => {
                     <p className="text-slate-600 mb-4">
                       {value.description}
                     </p>
-                    <ul className="space-y-2">
-                      {value.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center space-x-2">
-                          <Icon name="Check" size={16} className="text-green-500 flex-shrink-0" />
-                          <span className="text-sm text-slate-600">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
                   </div>
                 </div>
               </div>

@@ -84,16 +84,16 @@ const CTASection = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight px-4">
             Ready to <span className="brand-gradient-text">Start</span> Your Project?
           </h2>
-          <p className="text-xl lg:text-2xl text-blue-100 max-w-4xl mx-auto leading-relaxed mb-12">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-100 max-w-xl sm:max-w-2xl lg:max-w-4xl mx-auto leading-relaxed mb-8 sm:mb-12 px-4">
             Transform your digital vision into reality with Kayease. 
             Get a free consultation and discover how we can accelerate your growth.
           </p>
 
           {/* Primary CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-12 sm:mb-16 px-4">
             <Link to="/contact">
               <Button
                 variant="default"

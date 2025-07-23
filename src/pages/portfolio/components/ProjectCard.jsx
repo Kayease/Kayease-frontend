@@ -8,7 +8,7 @@ const ProjectCard = ({ project, onViewDetails }) => {
 
   return (
     <motion.div
-      className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer"
+      className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer h-full flex flex-col"
       whileHover={{ y: -8 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
@@ -25,14 +25,14 @@ const ProjectCard = ({ project, onViewDetails }) => {
         {/* Category Badge */}
         <div className="absolute top-4 left-4">
           <span className="px-3 py-1 bg-primary text-white text-xs font-medium rounded-full">
-            {project.category}
+            {project.categoryName || project.category}
           </span>
         </div>
 
         {/* Technology Stack */}
         <div className="absolute top-4 right-4">
           <div className="flex space-x-1">
-            {project.technologies.length > 3 && (
+            {project.technologies && project.technologies.length > 3 && (
               <div className="w-8 h-8 bg-white/90 rounded-lg flex items-center justify-center text-xs font-medium text-gray-700">
                 +{project.technologies.length - 3}
               </div>
@@ -42,7 +42,7 @@ const ProjectCard = ({ project, onViewDetails }) => {
       </div>
 
       {/* Project Details */}
-      <div className="p-6">
+      <div className="p-6 flex-1 flex flex-col">
         <div className="flex items-start justify-between mb-3">
           <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">
             {project.title}
@@ -54,12 +54,12 @@ const ProjectCard = ({ project, onViewDetails }) => {
           />
         </div>
 
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow">
           {project.description}
         </p>
 
         {/* Client Info */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-auto">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
               <Icon name="Building" size={14} className="text-gray-600" />
@@ -76,16 +76,18 @@ const ProjectCard = ({ project, onViewDetails }) => {
         </div>
 
         {/* Project Type Tags */}
-        <div className="flex flex-wrap gap-2 mt-4">
-          {project.tags.map((tag, index) => (
-            <span
-              key={index}
-              className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+        {project.tags && project.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-4">
+            {project.tags.map((tag, index) => (
+              <span
+                key={index}
+                className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </motion.div>
   );

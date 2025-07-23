@@ -1,111 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Icon from "../../components/AppIcon";
 import Button from "../../components/ui/Button";
-
-const jobOpenings = [
-  {
-    id: 1,
-    title: "Senior Full Stack Developer",
-    department: "Engineering",
-    location: "Remote / Bangalore",
-    type: "Full-time",
-    experience: "3-5 years",
-    skills: ["React", "Node.js", "TypeScript", "MongoDB", "AWS"],
-    description:
-      "Join our engineering team to build scalable web applications and innovative digital solutions.",
-    requirements: [
-      "3+ years of experience in full-stack development",
-      "Proficiency in React, Node.js, and modern JavaScript",
-      "Experience with cloud platforms (AWS/Azure)",
-      "Strong problem-solving and communication skills",
-    ],
-    posted: "2 days ago",
-  },
-  {
-    id: 2,
-    title: "UI/UX Designer",
-    department: "Design",
-    location: "Hybrid / Mumbai",
-    type: "Full-time",
-    experience: "2-4 years",
-    skills: ["Figma", "Adobe Creative Suite", "Prototyping", "User Research"],
-    description:
-      "Create beautiful and intuitive user experiences for our digital products and client projects.",
-    requirements: [
-      "2+ years of UI/UX design experience",
-      "Proficiency in Figma and design systems",
-      "Strong portfolio showcasing web and mobile designs",
-      "Understanding of user-centered design principles",
-    ],
-    posted: "1 week ago",
-  },
-  {
-    id: 3,
-    title: "Digital Marketing Specialist",
-    department: "Marketing",
-    location: "Remote",
-    type: "Full-time",
-    experience: "1-3 years",
-    skills: [
-      "SEO",
-      "Google Ads",
-      "Social Media",
-      "Analytics",
-      "Content Marketing",
-    ],
-    description:
-      "Drive digital marketing strategies and help our clients achieve their online growth goals.",
-    requirements: [
-      "1+ years of digital marketing experience",
-      "Knowledge of SEO, SEM, and social media marketing",
-      "Experience with Google Analytics and marketing tools",
-      "Creative thinking and analytical mindset",
-    ],
-    posted: "3 days ago",
-  },
-  {
-    id: 4,
-    title: "DevOps Engineer",
-    department: "Engineering",
-    location: "Bangalore",
-    type: "Full-time",
-    experience: "2-4 years",
-    skills: ["Docker", "Kubernetes", "AWS", "CI/CD", "Terraform"],
-    description:
-      "Build and maintain robust infrastructure to support our growing platform and client applications.",
-    requirements: [
-      "2+ years of DevOps/Infrastructure experience",
-      "Experience with containerization and orchestration",
-      "Knowledge of cloud platforms and automation tools",
-      "Strong scripting and monitoring skills",
-    ],
-    posted: "5 days ago",
-  },
-  {
-    id: 5,
-    title: "Business Development Executive",
-    department: "Sales",
-    location: "Delhi / Remote",
-    type: "Full-time",
-    experience: "1-3 years",
-    skills: [
-      "Sales",
-      "Client Relations",
-      "CRM",
-      "Negotiation",
-      "Lead Generation",
-    ],
-    description:
-      "Identify new business opportunities and build lasting relationships with potential clients.",
-    requirements: [
-      "1+ years of B2B sales experience",
-      "Excellent communication and presentation skills",
-      "Experience with CRM systems and sales processes",
-      "Self-motivated with strong networking abilities",
-    ],
-    posted: "1 day ago",
-  },
-];
+import { careerApi } from "../../utils/careerApi";
 
 const benefits = [
   {
@@ -135,19 +32,22 @@ const benefits = [
   },
 ];
 
-const departments = [
-  { name: "Engineering", count: 8, color: "bg-blue-500" },
-  { name: "Design", count: 3, color: "bg-purple-500" },
-  { name: "Marketing", count: 4, color: "bg-green-500" },
-  { name: "Sales", count: 2, color: "bg-orange-500" },
-  { name: "Operations", count: 3, color: "bg-pink-500" },
-];
-
 const CareersPage = () => {
+  const navigate = useNavigate();
   const [selectedJob, setSelectedJob] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState("All");
   const [isVisible, setIsVisible] = useState(false);
   const [animatedElements, setAnimatedElements] = useState(new Set());
+  const [jobOpenings, setJobOpenings] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [stats, setStats] = useState({
+    totalJobs: 0,
+    totalDepartments: 0,
+    teamMembers: 50,
+    satisfaction: 95
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -166,6 +66,100 @@ const CareersPage = () => {
 
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    loadCareersData();
+  }, []);
+
+  const loadCareersData = async () => {
+    setIsLoading(true);
+    setError("");
+
+    try {
+      // Fetch careers and stats
+      const [careersResponse, statsResponse] = await Promise.all([
+        careerApi.getAll({ status: "active", limit: 50 }),
+        careerApi.getStats(),
+      ]);
+
+      const careers = careersResponse.careers || [];
+
+      // Transform careers data to match the expected format
+      const transformedCareers = careers.map((career) => ({
+        id: career._id,
+        title: career.title,
+        department:
+          career.department.charAt(0).toUpperCase() +
+          career.department.slice(1),
+        location: career.location,
+        type:
+          career.jobType === "remote"
+            ? "Remote"
+            : career.jobType === "hybrid"
+            ? "Hybrid"
+            : "In-office",
+        experience: career.experience || "Not specified",
+        skills: career.skills || [],
+        description: career.description,
+        requirements: career.requirements || [],
+        responsibilities: career.responsibilities || [],
+        benefits: career.benefits || [],
+        salary: career.salary || "Competitive",
+        posted: formatDate(career.createdAt || career.postedDate),
+        status: career.status,
+      }));
+
+      setJobOpenings(transformedCareers);
+
+      // Create departments from stats
+      if (statsResponse.departments) {
+        const departmentColors = {
+          engineering: "bg-blue-500",
+          design: "bg-purple-500",
+          marketing: "bg-green-500",
+          sales: "bg-orange-500",
+          operations: "bg-pink-500",
+          other: "bg-gray-500",
+        };
+
+        const transformedDepartments = statsResponse.departments.map((dept) => ({
+          name: dept._id.charAt(0).toUpperCase() + dept._id.slice(1),
+          count: dept.activeCount || dept.count,
+          color: departmentColors[dept._id] || "bg-gray-500",
+        }));
+
+        setDepartments(transformedDepartments);
+      }
+
+      // Update stats for the stats section
+      setStats({
+        totalJobs: statsResponse.overview?.total || 0,
+        totalDepartments: statsResponse.departments?.length || 0,
+        teamMembers: 50, // Keep static for now
+        satisfaction: 95 // Keep static for now
+      });
+    } catch (error) {
+      console.error("Error loading careers:", error);
+      setError("Failed to load career opportunities. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "Recently";
+
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) return "1 day ago";
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 14) return "1 week ago";
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    return `${Math.floor(diffDays / 30)} months ago`;
+  };
 
   const filteredJobs =
     selectedDepartment === "All"
@@ -271,6 +265,13 @@ const CareersPage = () => {
     );
   };
 
+  // Debug info
+  console.log("Render - jobOpenings:", jobOpenings.length);
+  console.log("Render - departments:", departments.length);
+  console.log("Render - stats:", stats);
+  console.log("Render - isLoading:", isLoading);
+  console.log("Render - error:", error);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
       {/* Hero Section */}
@@ -289,21 +290,22 @@ const CareersPage = () => {
                 : "opacity-0 translate-y-8"
             }`}
           >
-            <h1 className="text-4xl md:text-6xl font-bold text-slate-800 mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-800 mb-4 sm:mb-6 leading-tight px-4">
               Join Our <span className="brand-gradient-text">Amazing Team</span>
             </h1>
-            <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-slate-600 mb-6 sm:mb-8 max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed px-4">
               Build the future of digital innovation with us. We're looking for
               passionate individuals who want to make a difference and grow
               their careers in a dynamic environment.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 px-4">
               <Button
                 variant="default"
                 size="lg"
-                className="cta-button text-white font-medium"
+                className="cta-button text-white font-medium w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg"
                 iconName="Search"
                 iconPosition="right"
+                iconSize={18}
                 onClick={() => navigate("/careers")}
               >
                 View Open Positions
@@ -311,8 +313,10 @@ const CareersPage = () => {
               <Button
                 variant="outline"
                 size="lg"
+                className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg"
                 iconName="Users"
                 iconPosition="left"
+                iconSize={18}
                 onClick={() => navigate("/about")}
               >
                 Learn About Culture
@@ -328,35 +332,35 @@ const CareersPage = () => {
           <div
             data-animate
             id="stats"
-            className={`grid grid-cols-2 md:grid-cols-4 gap-8 transition-all duration-700 delay-200 ${
+            className={`grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 transition-all duration-700 delay-200 ${
               animatedElements.has("stats")
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-8"
             }`}
           >
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold brand-gradient-text mb-2">
-                50+
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold brand-gradient-text mb-1 sm:mb-2">
+                {stats.teamMembers}+
               </div>
-              <div className="text-slate-600">Team Members</div>
+              <div className="text-slate-600 text-xs sm:text-sm leading-tight">Team Members</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold brand-gradient-text mb-2">
-                5
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold brand-gradient-text mb-1 sm:mb-2">
+                {stats.totalDepartments}
               </div>
-              <div className="text-slate-600">Departments</div>
+              <div className="text-slate-600 text-xs sm:text-sm leading-tight">Departments</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold brand-gradient-text mb-2">
-                20+
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold brand-gradient-text mb-1 sm:mb-2">
+                {stats.totalJobs}
               </div>
-              <div className="text-slate-600">Open Positions</div>
+              <div className="text-slate-600 text-xs sm:text-sm leading-tight">Open Positions</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold brand-gradient-text mb-2">
-                95%
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold brand-gradient-text mb-1 sm:mb-2">
+                {stats.satisfaction}%
               </div>
-              <div className="text-slate-600">Employee Satisfaction</div>
+              <div className="text-slate-600 text-xs sm:text-sm leading-tight">Employee Satisfaction</div>
             </div>
           </div>
         </div>
@@ -390,7 +394,7 @@ const CareersPage = () => {
                 key={benefit.title}
                 data-animate
                 id={`benefit-${index}`}
-                className={`group bg-white rounded-2xl p-6 shadow-sm border border-slate-200/50 hover-lift transition-all duration-700 ${
+                className={`group bg-white rounded-2xl p-6 shadow-sm border border-slate-200/50 hover-lift transition-all duration-700 h-full flex flex-col ${
                   animatedElements.has(`benefit-${index}`)
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-8"
@@ -410,7 +414,7 @@ const CareersPage = () => {
                     {benefit.title}
                   </h3>
                 </div>
-                <p className="text-slate-600 leading-relaxed">
+                <p className="text-slate-600 leading-relaxed flex-grow">
                   {benefit.description}
                 </p>
               </div>
@@ -418,6 +422,13 @@ const CareersPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Debug Section - Remove this later */}
+      <div className="bg-yellow-100 p-4 text-sm border-l-4 border-yellow-500">
+        <strong>Debug Info:</strong> Jobs: {jobOpenings.length}, Departments: {departments.length}, Loading: {isLoading.toString()}, Error: {error || 'none'}
+        <br />
+        <strong>Filtered Jobs:</strong> {filteredJobs.length} (Selected Dept: {selectedDepartment})
+      </div>
 
       {/* Job Openings Section */}
       <section className="py-20 bg-gradient-to-br from-slate-50 to-white">
@@ -449,7 +460,10 @@ const CareersPage = () => {
                     : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200"
                 }`}
               >
-                All Departments
+                <span>All Departments</span>
+                <span className="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full text-xs ml-2">
+                  {jobOpenings.length}
+                </span>
               </button>
               {departments.map((dept) => (
                 <button
@@ -473,87 +487,140 @@ const CareersPage = () => {
 
           {/* Job Listings */}
           <div className="space-y-4">
-            {filteredJobs.map((job, index) => (
-              <div
-                key={job.id}
-                data-animate
-                id={`job-${job.id}`}
-                className={`group bg-white rounded-2xl p-6 shadow-sm border border-slate-200/50 hover-lift cursor-pointer transition-all duration-700 ${
-                  animatedElements.has(`job-${job.id}`)
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
-                }`}
-                style={{ animationDelay: `${600 + index * 100}ms` }}
-                onClick={() => setSelectedJob(job)}
-              >
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <h3 className="text-xl font-semibold text-slate-800 group-hover:text-primary transition-colors duration-200">
-                          {job.title}
-                        </h3>
-                        <div className="flex items-center space-x-4 text-sm text-slate-600 mt-1">
-                          <span className="flex items-center space-x-1">
-                            <Icon name="Building" size={14} />
-                            <span>{job.department}</span>
-                          </span>
-                          <span className="flex items-center space-x-1">
-                            <Icon name="MapPin" size={14} />
-                            <span>{job.location}</span>
-                          </span>
-                          <span className="flex items-center space-x-1">
-                            <Icon name="Clock" size={14} />
-                            <span>{job.experience}</span>
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-xs text-slate-500">{job.posted}</div>
-                    </div>
-
-                    <p className="text-slate-600 mb-4 line-clamp-2">
-                      {job.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {job.skills.slice(0, 4).map((skill, skillIndex) => (
-                        <span
-                          key={skillIndex}
-                          className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                      {job.skills.length > 4 && (
-                        <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md">
-                          +{job.skills.length - 4} more
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-3 mt-4 md:mt-0 md:ml-6">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      iconName="Eye"
-                      iconPosition="left"
-                    >
-                      View Details
-                    </Button>
-                    <Button
-                      variant="default"
-                      size="sm"
-                      className="cta-button text-white"
-                      iconName="Send"
-                      iconPosition="right"
-                    >
-                      Apply
-                    </Button>
-                  </div>
+            {isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="flex items-center space-x-3">
+                  <Icon
+                    name="Loader2"
+                    size={20}
+                    className="animate-spin text-primary"
+                  />
+                  <span className="text-slate-600">
+                    Loading career opportunities...
+                  </span>
                 </div>
               </div>
-            ))}
+            ) : error ? (
+              <div className="text-center py-12">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+                  <Icon
+                    name="AlertCircle"
+                    size={24}
+                    className="text-red-500 mx-auto mb-3"
+                  />
+                  <p className="text-red-700 mb-4">{error}</p>
+                  <Button
+                    variant="outline"
+                    onClick={loadCareersData}
+                    iconName="RefreshCw"
+                    iconPosition="left"
+                    iconSize={16}
+                  >
+                    Try Again
+                  </Button>
+                </div>
+              </div>
+            ) : filteredJobs.length === 0 ? (
+              <div className="text-center py-12">
+                <Icon
+                  name="Briefcase"
+                  size={48}
+                  className="text-slate-400 mx-auto mb-4"
+                />
+                <h3 className="text-xl font-semibold text-slate-700 mb-2">
+                  No positions available
+                </h3>
+                <p className="text-slate-600">
+                  {selectedDepartment === "All"
+                    ? "We don't have any open positions at the moment. Check back soon!"
+                    : `No positions available in ${selectedDepartment} department.`}
+                </p>
+              </div>
+            ) : (
+              filteredJobs.map((job, index) => (
+                <div
+                  key={job.id}
+                  data-animate
+                  id={`job-${job.id}`}
+                  className={`group bg-white rounded-2xl p-6 shadow-sm border border-slate-200/50 hover-lift cursor-pointer transition-all duration-700 ${
+                    animatedElements.has(`job-${job.id}`)
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-8"
+                  }`}
+                  style={{ animationDelay: `${600 + index * 100}ms` }}
+                  onClick={() => setSelectedJob(job)}
+                >
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="text-xl font-semibold text-slate-800 group-hover:text-primary transition-colors duration-200">
+                            {job.title}
+                          </h3>
+                          <div className="flex items-center space-x-4 text-sm text-slate-600 mt-1">
+                            <span className="flex items-center space-x-1">
+                              <Icon name="Building" size={14} />
+                              <span>{job.department}</span>
+                            </span>
+                            <span className="flex items-center space-x-1">
+                              <Icon name="MapPin" size={14} />
+                              <span>{job.location}</span>
+                            </span>
+                            <span className="flex items-center space-x-1">
+                              <Icon name="Clock" size={14} />
+                              <span>{job.experience}</span>
+                            </span>
+                          </div>
+                        </div>
+                        <div className="text-xs text-slate-500">
+                          {job.posted}
+                        </div>
+                      </div>
+
+                      <p className="text-slate-600 mb-4 line-clamp-2">
+                        {job.description}
+                      </p>
+
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {job.skills.slice(0, 4).map((skill, skillIndex) => (
+                          <span
+                            key={skillIndex}
+                            className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                        {job.skills.length > 4 && (
+                          <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md">
+                            +{job.skills.length - 4} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-3 mt-4 md:mt-0 md:ml-6">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        iconName="Eye"
+                        iconPosition="left"
+                      >
+                        View Details
+                      </Button>
+                      <Button
+                        variant="default"
+                        size="sm"
+                        className="cta-button text-white"
+                        iconName="Send"
+                        iconPosition="right"
+                      >
+                        Apply
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </section>

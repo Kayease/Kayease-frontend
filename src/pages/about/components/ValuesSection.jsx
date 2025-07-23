@@ -139,16 +139,13 @@ const ValuesSection = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-full px-6 py-3 mb-6">
             <Icon name="Compass" size={20} className="text-primary" />
-            <span className="text-sm font-medium text-primary">Our Values</span>
+            <span className="text-sm font-medium text-primary">Core Principles</span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            The <span className="brand-gradient-text">Principles</span> That
-            Guide Us
+            Principles That Guide Our Work
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Our core values aren't just words on a wall—they're the foundation
-            of every decision we make, every solution we build, and every
-            relationship we nurture.
+            Our core principles aren't just words on a wall—they're the foundation of every decision we make, every solution we build, and every relationship we nurture.
           </p>
         </div>
 
@@ -287,19 +284,15 @@ const ValuesSection = () => {
         {/* Values Impact Stats */}
         <div className="bg-gradient-to-r from-blue-50 to-sky-50 rounded-3xl p-8 mb-16">
           <h3 className="text-2xl font-bold text-slate-900 text-center mb-8">
-            Our Values in Numbers
+            Values in Numbers
           </h3>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
               { number: "98%", label: "Client Retention Rate", icon: "Heart" },
-              {
-                number: "150+",
-                label: "Successful Projects",
-                icon: "CheckCircle",
-              },
-              { number: "24/7", label: "Support Availability", icon: "Clock" },
-              { number: "15+", label: "Years of Excellence", icon: "Award" },
+              { number: "150+", label: "Projects Delivered", icon: "CheckCircle" },
+              { number: "24/7", label: "Support", icon: "Clock" },
+              { number: "5+", label: "Years of Excellence", icon: "Award" },
             ].map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">

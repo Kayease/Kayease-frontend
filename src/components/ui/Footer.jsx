@@ -114,7 +114,7 @@ const Footer = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-8 sm:mb-10 lg:mb-12">
           {/* Brand Section */}
           <div
             className={`lg:col-span-1 transition-all duration-700 ${
@@ -129,12 +129,12 @@ const Footer = () => {
                 <img
                   src={"/Kayease-black.png"}
                   alt="Kayease Logo"
-                  className="w-52 h-28 object-contain rounded-lg transition-all duration-300"
+                  className="w-32 h-16 sm:w-36 sm:h-18 md:w-40 md:h-20 lg:w-44 lg:h-22 object-contain rounded-lg transition-all duration-300"
                 />
               </div>
             </Link>
 
-            <p className="text-sm text-slate-600 leading-relaxed mb-6">
+            <p className="text-sm text-slate-600 leading-relaxed mb-4 sm:mb-6">
               Transforming ideas into digital reality with innovative solutions
               that drive business growth and user engagement.
             </p>
@@ -307,7 +307,7 @@ const Footer = () => {
             </h4>
 
             {/* Social Links */}
-            <div className="flex gap-4 mb-6 justify-start">
+            <div className="flex gap-3 sm:gap-4 mb-4 sm:mb-6 justify-start flex-wrap">
               <a
                 href="https://www.instagram.com/Kayease.global/"
                 target="_blank"

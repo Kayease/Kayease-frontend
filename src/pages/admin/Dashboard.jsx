@@ -8,6 +8,7 @@ import { blogApi } from "../../utils/blogApi";
 import { careerApi } from "../../utils/careerApi";
 import { portfolioApi } from "../../utils/portfolioApi";
 import { clientApi } from "../../utils/clientApi";
+import { contactApi } from "../../utils/contactApi";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -52,6 +53,14 @@ const Dashboard = () => {
       totalViews: "0",
       thisMonth: 0,
     },
+    contacts: {
+      total: 0,
+      new: 0,
+      contacted: 0,
+      inProgress: 0,
+      closed: 0,
+      thisMonth: 0,
+    },
     overview: {
       totalViews: "0",
       totalUsers: "0",
@@ -87,11 +96,12 @@ const Dashboard = () => {
     
     try {
       // Load stats from all APIs in parallel
-      const [blogStats, careerStats, portfolioStats, clientStats] = await Promise.allSettled([
+      const [blogStats, careerStats, portfolioStats, clientStats, contactStats] = await Promise.allSettled([
         blogApi.getStats().catch(() => ({ totalBlogs: 0, publishedBlogs: 0, draftBlogs: 0, featuredBlogs: 0 })),
         careerApi.getStats().catch(() => ({ totalCareers: 0, activeCareers: 0, pausedCareers: 0, closedCareers: 0 })),
         portfolioApi.getStats().catch(() => ({ totalProjects: 0, completedProjects: 0, inProgressProjects: 0, featuredProjects: 0 })),
-        clientApi.getStats().catch(() => ({ totalClients: 0, activeClients: 0 }))
+        clientApi.getStats().catch(() => ({ totalClients: 0, activeClients: 0 })),
+        contactApi.getStats().catch(() => ({ overview: { total: 0, new: 0, contacted: 0, inProgress: 0, closed: 0 }, thisMonth: 0 }))
       ]);
 
       // Process blog stats
@@ -99,6 +109,7 @@ const Dashboard = () => {
       const careerData = careerStats.status === 'fulfilled' ? careerStats.value : {};
       const portfolioData = portfolioStats.status === 'fulfilled' ? portfolioStats.value : {};
       const clientData = clientStats.status === 'fulfilled' ? clientStats.value : {};
+      const contactData = contactStats.status === 'fulfilled' ? contactStats.value : {};
 
       setStats(prevStats => ({
         ...prevStats,
@@ -112,10 +123,10 @@ const Dashboard = () => {
           thisMonth: blogData.thisMonthBlogs || 0,
         },
         careers: {
-          total: careerData.totalCareers || 0,
-          active: careerData.activeCareers || 0,
-          paused: careerData.pausedCareers || 0,
-          closed: careerData.closedCareers || 0,
+          total: careerData.overview?.total || 0,
+          active: careerData.overview?.active || 0,
+          paused: careerData.overview?.paused || 0,
+          closed: careerData.overview?.closed || 0,
           totalApplications: careerData.totalApplications || 0,
           totalViews: formatNumber(careerData.totalViews || 0),
           thisMonth: careerData.thisMonthCareers || 0,
@@ -136,6 +147,14 @@ const Dashboard = () => {
           onHold: 0,
           totalViews: formatNumber(clientData.totalViews || 0),
           thisMonth: clientData.thisMonthClients || 0,
+        },
+        contacts: {
+          total: contactData.overview?.total || 0,
+          new: contactData.overview?.new || 0,
+          contacted: contactData.overview?.contacted || 0,
+          inProgress: contactData.overview?.inProgress || 0,
+          closed: contactData.overview?.closed || 0,
+          thisMonth: contactData.thisMonth || 0,
         },
         overview: {
           totalViews: formatNumber(
@@ -225,6 +244,15 @@ const Dashboard = () => {
       color: "bg-yellow-500",
       count: stats.clients.total,
       route: "/admin/clients",
+    },
+    {
+      id: "contacts",
+      title: "Contact Management",
+      description: "Manage contact inquiries and project requests",
+      icon: "Mail",
+      color: "bg-indigo-500",
+      count: stats.contacts.total,
+      route: "/admin/contacts",
     },
   ];
 

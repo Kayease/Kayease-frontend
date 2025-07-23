@@ -80,7 +80,7 @@ const ServicesPreview = () => {
               onMouseEnter={() => setHoveredService(service.id)}
               onMouseLeave={() => setHoveredService(null)}
             >
-              <div className="relative bg-white rounded-2xl p-8 shadow-lg border border-slate-200 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+              <div className="relative bg-white rounded-2xl p-8 shadow-lg border border-slate-200 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden h-full flex flex-col">
                 {/* Background Gradient on Hover */}
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
@@ -103,12 +103,12 @@ const ServicesPreview = () => {
                   {service.title}
                 </h3>
 
-                <p className="text-text-secondary mb-6 leading-relaxed">
+                <p className="text-text-secondary mb-6 leading-relaxed flex-grow">
                   {service.description}
                 </p>
 
                 {/* Technologies */}
-                <div className="space-y-4">
+                <div className="space-y-4 mt-auto">
                   <div className="flex flex-wrap gap-2">
                     {service.technologies.map((tech, techIndex) => (
                       <span

@@ -83,17 +83,17 @@ const WhyKayease = () => {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-text-primary mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-text-primary mb-4 sm:mb-6 leading-tight px-4">
             Why Choose <span className="brand-gradient-text">Kayease</span>?
           </h2>
-          <p className="text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-text-secondary max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed px-4">
             We combine technical excellence with strategic insight to deliver solutions 
             that don't just work—they transform your business.
           </p>
         </motion.div>
 
         {/* Value Propositions */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-16 sm:mb-20">
           {valuePropositions.map((item, index) => (
             <motion.div
               key={item.id}

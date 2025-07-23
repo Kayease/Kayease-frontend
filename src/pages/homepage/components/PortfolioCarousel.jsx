@@ -3,76 +3,124 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
+import { portfolioApi } from '../../../utils/portfolioApi';
 
 const PortfolioCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const projects = [
-    {
-      id: 1,
-      title: 'TechFlow SaaS Platform',
-      category: 'Web Development',
-      image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&h=600&fit=crop',
-      description: 'A comprehensive project management platform built with Next.js and Node.js',
-      metrics: {
-        conversion: '+245%',
-        users: '50K+',
-        performance: '98%'
-      },
-      technologies: ['Next.js', 'Node.js', 'PostgreSQL', 'AWS'],
-      client: 'TechFlow Inc.',
-      year: '2024'
-    },
-    {
-      id: 2,
-      title: 'EcoMarket Mobile App',
-      category: 'Mobile Development',
-      image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=600&fit=crop',
-      description: 'Sustainable marketplace app connecting eco-conscious consumers with green products',
-      metrics: {
-        downloads: '100K+',
-        rating: '4.8★',
-        retention: '85%'
-      },
-      technologies: ['React Native', 'Firebase', 'Stripe', 'Redux'],
-      client: 'EcoMarket',
-      year: '2024'
-    },
-    {
-      id: 3,
-      title: 'FinanceHub Dashboard',
-      category: 'Web Application',
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop',
-      description: 'Real-time financial analytics dashboard for investment management',
-      metrics: {
-        accuracy: '99.9%',
-        speed: '2.1s',
-        uptime: '99.99%'
-      },
-      technologies: ['React', 'D3.js', 'Python', 'MongoDB'],
-      client: 'FinanceHub',
-      year: '2024'
-    },
-    {
-      id: 4,
-      title: 'HealthCare Connect',
-      category: 'Healthcare Platform',
-      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=600&fit=crop',
-      description: 'Telemedicine platform connecting patients with healthcare providers',
-      metrics: {
-        consultations: '25K+',
-        satisfaction: '96%',
-        response: '< 30s'
-      },
-      technologies: ['Vue.js', 'WebRTC', 'Socket.io', 'Docker'],
-      client: 'HealthCare Connect',
-      year: '2024'
-    }
-  ];
-
+  // Fetch portfolio data on component mount
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    loadPortfolioData();
+  }, []);
+
+  const loadPortfolioData = async () => {
+    setIsLoading(true);
+    setError('');
+
+    try {
+      // Fetch featured projects for homepage display
+      const response = await portfolioApi.getAll({ 
+        featured: true, 
+        limit: 6,
+        sortBy: 'createdAt',
+        sortOrder: 'desc'
+      });
+
+      const portfolios = response.portfolios || [];
+      
+      // Transform portfolio data to match carousel format
+      const transformedProjects = portfolios.map((portfolio) => ({
+        id: portfolio._id,
+        title: portfolio.title,
+        category: getCategoryName(portfolio.category),
+        image: portfolio.mainImage || 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&h=600&fit=crop',
+        description: portfolio.description || portfolio.shortDescription || `A ${getCategoryName(portfolio.category).toLowerCase()} project delivered for ${portfolio.clientName || 'our client'}.`,
+        metrics: generateMetrics(portfolio),
+        technologies: portfolio.technologies || [],
+        client: portfolio.clientName || 'Client',
+        year: new Date(portfolio.createdAt).getFullYear().toString(),
+        slug: portfolio.slug
+      }));
+
+      setProjects(transformedProjects);
+      
+      // Reset current index if it's out of bounds
+      if (currentIndex >= transformedProjects.length) {
+        setCurrentIndex(0);
+      }
+
+    } catch (error) {
+      console.error('Error loading portfolio data:', error);
+      setError('Failed to load portfolio projects');
+      // Fallback to empty array
+      setProjects([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Helper function to get category display name
+  const getCategoryName = (categoryId) => {
+    const categoryMap = {
+      'web-dev': 'Web Development',
+      'mobile': 'Mobile Development',
+      'ecommerce': 'E-commerce',
+      'saas': 'SaaS Platform',
+      'healthcare': 'Healthcare',
+      'fintech': 'Fintech',
+      'education': 'Education',
+      'other': 'Digital Solution'
+    };
+    return categoryMap[categoryId] || 'Digital Project';
+  };
+
+  // Helper function to generate metrics from portfolio data
+  const generateMetrics = (portfolio) => {
+    const metrics = {};
+    
+    // Use actual metrics if available, otherwise generate meaningful ones
+    if (portfolio.metrics && Object.keys(portfolio.metrics).length > 0) {
+      return portfolio.metrics;
+    }
+    
+    // Generate category-specific metrics
+    switch (portfolio.category) {
+      case 'web-dev':
+        metrics.performance = '98%';
+        metrics.speed = '< 2s';
+        metrics.uptime = '99.9%';
+        break;
+      case 'mobile':
+        metrics.rating = '4.8★';
+        metrics.downloads = '10K+';
+        metrics.retention = '85%';
+        break;
+      case 'ecommerce':
+        metrics.conversion = '+150%';
+        metrics.sales = '↑200%';
+        metrics.users = '25K+';
+        break;
+      case 'saas':
+        metrics.users = '50K+';
+        metrics.growth = '+300%';
+        metrics.satisfaction = '96%';
+        break;
+      default:
+        metrics.quality = '100%';
+        metrics.delivery = 'On Time';
+        metrics.satisfaction = '95%';
+    }
+    
+    return metrics;
+  };
+
+  // Auto-play effect
+  useEffect(() => {
+    if (!isAutoPlaying || projects.length === 0) return;
 
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => 
@@ -115,7 +163,47 @@ const PortfolioCarousel = () => {
           </p>
         </motion.div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex items-center justify-center py-20">
+            <div className="flex items-center space-x-3">
+              <Icon name="Loader2" size={24} className="animate-spin text-primary" />
+              <span className="text-text-secondary text-lg">Loading our latest projects...</span>
+            </div>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && !isLoading && (
+          <div className="text-center py-20">
+            <div className="bg-red-50 border border-red-200 rounded-2xl p-8 max-w-md mx-auto">
+              <Icon name="AlertCircle" size={32} className="text-red-500 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-red-700 mb-2">Unable to Load Projects</h3>
+              <p className="text-red-600 mb-4">{error}</p>
+              <button
+                onClick={loadPortfolioData}
+                className="inline-flex items-center space-x-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
+              >
+                <Icon name="RefreshCw" size={16} />
+                <span>Try Again</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && !error && projects.length === 0 && (
+          <div className="text-center py-20">
+            <Icon name="Briefcase" size={48} className="text-slate-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-text-primary mb-2">No Featured Projects</h3>
+            <p className="text-text-secondary">
+              We're working on some amazing projects. Check back soon!
+            </p>
+          </div>
+        )}
+
         {/* Carousel Container */}
+        {!isLoading && !error && projects.length > 0 && (
         <div 
           className="relative"
           onMouseEnter={() => setIsAutoPlaying(false)}
@@ -129,7 +217,8 @@ const PortfolioCarousel = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -300 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="bg-white rounded-2xl shadow-xl overflow-hidden"
+                className="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer group"
+                onClick={() => window.location.href = `/portfolio/${projects[currentIndex].slug}`}
               >
                 <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[500px]">
                   {/* Project Image */}
@@ -173,21 +262,23 @@ const PortfolioCarousel = () => {
                     </div>
 
                     {/* Technologies */}
-                    <div className="mb-8">
-                      <h4 className="text-sm font-semibold text-text-secondary mb-3 uppercase tracking-wide">
-                        Technologies Used
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {projects[currentIndex].technologies.map((tech, index) => (
-                          <span
-                            key={index}
-                            className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full font-medium"
-                          >
-                            {tech}
-                          </span>
-                        ))}
+                    {projects[currentIndex].technologies.length > 0 && (
+                      <div className="mb-8">
+                        <h4 className="text-sm font-semibold text-text-secondary mb-3 uppercase tracking-wide">
+                          Technologies Used
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {projects[currentIndex].technologies.map((tech, index) => (
+                            <span
+                              key={index}
+                              className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full font-medium"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
                     {/* Client Info */}
                     <div className="flex items-center justify-between">
@@ -225,8 +316,7 @@ const PortfolioCarousel = () => {
             <Icon name="ChevronRight" size={24} className="text-text-primary" />
           </button>
         </div>
-
-        {/* Dots Indicator */}
+        )}
         <div className="flex justify-center space-x-2 mt-8">
           {projects.map((_, index) => (
             <button
@@ -259,6 +349,29 @@ const PortfolioCarousel = () => {
             </motion.button>
           </Link>
         </motion.div>
+      
+
+        {/* Always show CTA even when no projects */}
+        {!isLoading && projects.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="text-center mt-8"
+          >
+            <Link to="/portfolio">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary to-secondary text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <span>View Our Portfolio</span>
+                <Icon name="ExternalLink" size={20} />
+              </motion.button>
+            </Link>
+          </motion.div>
+        )}
       </div>
     </section>
   );

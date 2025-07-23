@@ -203,7 +203,7 @@ const TechnologyShowcase = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-slate-50 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:bg-white border border-slate-200 hover:border-blue-200"
+                className="bg-slate-50 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:bg-white border border-slate-200 hover:border-blue-200 h-full flex flex-col"
               >
                 <div className="flex items-center space-x-4 mb-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
@@ -214,11 +214,11 @@ const TechnologyShowcase = () => {
                   </div>
                 </div>
 
-                <p className="text-sm text-slate-600 mb-4 leading-relaxed">
+                <p className="text-sm text-slate-600 mb-4 leading-relaxed flex-grow">
                   {tech.description}
                 </p>
 
-                <div>
+                <div className="mt-auto">
                   <h5 className="font-semibold text-slate-900 mb-2 text-sm">Why we choose it:</h5>
                   <ul className="space-y-1">
                     {tech.reasons.map((reason, reasonIndex) => (

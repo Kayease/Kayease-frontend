@@ -82,7 +82,7 @@ const Header = () => {
               <img
                 src={"/Kayease-black.png"}
                 alt="Kayease Logo"
-                className="w-44 h-44 object-contain rounded-lg transition-all duration-300"
+                className="w-32 h-16 sm:w-36 sm:h-18 md:w-40 md:h-20 lg:w-44 lg:h-22 object-contain rounded-lg transition-all duration-300"
               />
             </div>
           </Link>

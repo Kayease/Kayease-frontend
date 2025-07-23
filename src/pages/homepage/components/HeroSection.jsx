@@ -103,12 +103,12 @@ const HeroSection = () => {
         >
           {/* Main Headline with Typewriter Effect */}
           <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl font-extrabold mb-6 text-center"
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-4 sm:mb-6 text-center leading-tight"
               style={{ color: '#111' }}
             >
               Unlocking Digital Potential
             </h1>
-            <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-center"
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-4 sm:mb-6 text-center leading-relaxed px-4"
               style={{ color: '#333' }}
             >
               Smart, Scalable Solutions From Code to Conversions
@@ -120,7 +120,7 @@ const HeroSection = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 3, duration: 0.8 }}
-            className="text-lg sm:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 max-w-xl sm:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto leading-relaxed px-4"
           >
             We architect digital ecosystems that scale with your ambition.
             Transform complex challenges into streamlined solutions with
@@ -132,29 +132,29 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 3.5, duration: 0.8 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-8"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-6 sm:pt-8 px-4"
           >
-            <Link to="/contact">
+            <Link to="/contact" className="w-full sm:w-auto">
               <Button
                 variant="default"
                 size="lg"
-                className="cta-button text-white font-semibold px-8 py-4 text-lg min-w-[200px]"
+                className="cta-button text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:min-w-[200px]"
                 iconName="ArrowRight"
                 iconPosition="right"
-                iconSize={20}
+                iconSize={18}
               >
                 Start Your Project
               </Button>
             </Link>
 
-            <Link to="/portfolio">
+            <Link to="/portfolio" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
-                className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-semibold px-8 py-4 text-lg min-w-[200px]"
+                className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:min-w-[200px]"
                 iconName="Play"
                 iconPosition="left"
-                iconSize={20}
+                iconSize={18}
               >
                 View Our Work
               </Button>
@@ -166,7 +166,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 4, duration: 0.8 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-8 pt-16 max-w-4xl mx-auto"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 pt-12 sm:pt-16 max-w-sm sm:max-w-2xl lg:max-w-4xl mx-auto px-4"
           >
             {[
               { number: "150+", label: "Projects Delivered" },
@@ -175,10 +175,10 @@ const HeroSection = () => {
               { number: "24/7", label: "Support Available" },
             ].map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl lg:text-4xl font-bold text-black mb-2">
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black mb-1 sm:mb-2">
                   {stat.number}
                 </div>
-                <div className="text-gray-900 text-sm lg:text-base">
+                <div className="text-gray-900 text-xs sm:text-sm lg:text-base leading-tight">
                   {stat.label}
                 </div>
               </div>

@@ -22,7 +22,7 @@ const BlogCard = ({ post }) => {
 
   return (
     <article
-      className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
+      className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group cursor-pointer h-full flex flex-col"
       onClick={handleClick}
     >
       {/* Image */}
@@ -40,7 +40,7 @@ const BlogCard = ({ post }) => {
       </div>
 
       {/* Content */}
-      <div className="p-6">
+      <div className="p-6 flex-1 flex flex-col">
         {/* Date */}
         <div className="flex items-center space-x-2 mb-3">
           <Icon name="Calendar" size={14} className="text-slate-400" />
@@ -55,7 +55,7 @@ const BlogCard = ({ post }) => {
         </h3>
 
         {/* Excerpt */}
-        <p className="text-slate-600 text-sm mb-4 leading-relaxed line-clamp-3">
+        <p className="text-slate-600 text-sm mb-4 leading-relaxed line-clamp-3 flex-grow">
           {post.excerpt}
         </p>
       </div>

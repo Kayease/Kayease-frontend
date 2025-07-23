@@ -75,7 +75,7 @@ const Contact = () => {
 
             <motion.h1 
               variants={itemVariants}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary mb-6"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary mb-4 sm:mb-6 leading-tight px-4"
             >
               Get In Touch With{' '}
               <span className="brand-gradient-text">Kayease</span>
@@ -83,24 +83,24 @@ const Contact = () => {
 
             <motion.p 
               variants={itemVariants}
-              className="text-xl text-text-secondary mb-8 max-w-3xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg md:text-xl text-text-secondary mb-6 sm:mb-8 max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed px-4"
             >
               Ready to transform your digital presence? Let's discuss your project and explore how we can help you achieve your goals with cutting-edge solutions.
             </motion.p>
 
             <motion.div 
               variants={itemVariants}
-              className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
+              className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-xs sm:max-w-2xl lg:max-w-4xl mx-auto px-4"
             >
               {trustSignals.map((signal, index) => (
                 <div key={index} className="text-center">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3">
-                    <Icon name={signal.icon} size={24} className="text-primary" />
+                  <div className="w-10 sm:w-12 h-10 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                    <Icon name={signal.icon} size={20} className="text-primary sm:w-6 sm:h-6" />
                   </div>
-                  <h3 className="font-semibold text-text-primary text-sm mb-1">
+                  <h3 className="font-semibold text-text-primary text-xs sm:text-sm mb-1 leading-tight">
                     {signal.title}
                   </h3>
-                  <p className="text-xs text-text-secondary">
+                  <p className="text-[10px] sm:text-xs text-text-secondary leading-tight">
                     {signal.description}
                   </p>
                 </div>

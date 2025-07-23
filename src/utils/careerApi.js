@@ -1,5 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-
+const API_BASE_URL= import.meta.env.VITE_BACKEND_URL;
 // Helper function to handle API responses
 const handleResponse = async (response) => {
   if (!response.ok) {
@@ -20,26 +19,26 @@ export const careerApi = {
       }
     });
     
-    const url = `${API_BASE_URL}/careers${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const url = `${API_BASE_URL}/api/careers${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
     const response = await fetch(url);
     return handleResponse(response);
   },
 
   // Get career by ID
   getById: async (id) => {
-    const response = await fetch(`${API_BASE_URL}/careers/${id}`);
+    const response = await fetch(`${API_BASE_URL}/api/careers/${id}`);
     return handleResponse(response);
   },
 
   // Get career by slug
   getBySlug: async (slug) => {
-    const response = await fetch(`${API_BASE_URL}/careers/slug/${slug}`);
+    const response = await fetch(`${API_BASE_URL}/api/careers/slug/${slug}`);
     return handleResponse(response);
   },
 
   // Create new career
   create: async (careerData) => {
-    const response = await fetch(`${API_BASE_URL}/careers`, {
+    const response = await fetch(`${API_BASE_URL}/api/careers`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,7 +50,7 @@ export const careerApi = {
 
   // Update career
   update: async (id, careerData) => {
-    const response = await fetch(`${API_BASE_URL}/careers/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/api/careers/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -63,7 +62,7 @@ export const careerApi = {
 
   // Delete career
   delete: async (id) => {
-    const response = await fetch(`${API_BASE_URL}/careers/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/api/careers/${id}`, {
       method: 'DELETE',
     });
     return handleResponse(response);
@@ -71,7 +70,7 @@ export const careerApi = {
 
   // Toggle active status
   toggleActive: async (id) => {
-    const response = await fetch(`${API_BASE_URL}/careers/${id}/toggle-status`, {
+    const response = await fetch(`${API_BASE_URL}/api/careers/${id}/toggle-status`, {
       method: 'PATCH',
     });
     return handleResponse(response);
@@ -79,13 +78,13 @@ export const careerApi = {
 
   // Get career statistics
   getStats: async () => {
-    const response = await fetch(`${API_BASE_URL}/careers/stats/overview`);
+    const response = await fetch(`${API_BASE_URL}/api/careers/stats/overview`);
     return handleResponse(response);
   },
 
   // Bulk delete careers
   bulkDelete: async (ids) => {
-    const response = await fetch(`${API_BASE_URL}/careers/bulk/delete`, {
+    const response = await fetch(`${API_BASE_URL}/api/careers/bulk/delete`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -97,13 +96,13 @@ export const careerApi = {
 
   // Get active careers
   getActive: async (limit = 10) => {
-    const response = await fetch(`${API_BASE_URL}/careers?status=active&limit=${limit}&sortBy=createdAt&sortOrder=desc`);
+    const response = await fetch(`${API_BASE_URL}/api/careers?status=active&limit=${limit}&sortBy=createdAt&sortOrder=desc`);
     return handleResponse(response);
   },
 
   // Get recent careers
   getRecent: async (limit = 5) => {
-    const response = await fetch(`${API_BASE_URL}/careers?limit=${limit}&sortBy=createdAt&sortOrder=desc`);
+    const response = await fetch(`${API_BASE_URL}/api/careers?limit=${limit}&sortBy=createdAt&sortOrder=desc`);
     return handleResponse(response);
   },
 
@@ -123,14 +122,14 @@ export const careerApi = {
       }
     });
     
-    const url = `${API_BASE_URL}/careers/${careerId}/applications${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+    const url = `${API_BASE_URL}/api/careers/${careerId}/applications${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
     const response = await fetch(url);
     return handleResponse(response);
   },
 
   // Submit application
   submitApplication: async (careerId, applicationData) => {
-    const response = await fetch(`${API_BASE_URL}/careers/${careerId}/apply`, {
+    const response = await fetch(`${API_BASE_URL}/api/careers/${careerId}/apply`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

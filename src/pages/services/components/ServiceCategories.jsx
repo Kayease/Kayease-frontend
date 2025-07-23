@@ -121,7 +121,7 @@ const ServiceCategories = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-4xl md:text-5xl font-bold text-slate-900 mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight px-4"
           >
             Our <span className="brand-gradient-text">Services</span>
           </motion.h2>
@@ -129,17 +129,17 @@ const ServiceCategories = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl text-slate-600 max-w-3xl mx-auto"
+            className="text-base sm:text-lg md:text-xl text-slate-600 max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto px-4"
           >
             Comprehensive digital solutions tailored to your business needs, 
             from concept to launch and beyond.
           </motion.p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Category Navigation */}
           <div className="lg:col-span-1">
-            <div className="space-y-3">
+            <div className="space-y-3 flex flex-col h-full">
               {categories.map((category, index) => (
                 <motion.button
                   key={category.id}
@@ -147,7 +147,7 @@ const ServiceCategories = () => {
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   onClick={() => setActiveCategory(category.id)}
-                  className={`w-full text-left p-6 rounded-xl border-2 transition-all duration-300 ${
+                  className={`w-full text-left p-6 rounded-xl border-2 transition-all duration-300 flex-1 min-h-[120px] flex items-center ${
                     activeCategory === category.id
                       ? `${getColorClasses(category.color, 'border')} bg-slate-50 shadow-lg`
                       : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'

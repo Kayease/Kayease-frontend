@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
 import { toast } from 'react-toastify';
+import { validateCareerForm, validateSkill, sanitizeCareerData, getFieldCharacterCount } from '../../utils/careerValidation';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -97,13 +98,37 @@ const CareerForm = () => {
   };
 
   const handleAddSkill = () => {
-    if (skillInput.trim() && !formData.skills.includes(skillInput.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        skills: [...prev.skills, skillInput.trim()]
-      }));
-      setSkillInput('');
+    const trimmedSkill = skillInput.trim();
+    
+    // Validate skill
+    const validationError = validateSkill(trimmedSkill);
+    if (validationError) {
+      setErrors(prev => ({ ...prev, skillInput: validationError }));
+      return;
     }
+    
+    // Check for duplicates (case insensitive)
+    const isDuplicate = formData.skills.some(
+      skill => skill.toLowerCase() === trimmedSkill.toLowerCase()
+    );
+    
+    if (isDuplicate) {
+      setErrors(prev => ({ ...prev, skillInput: 'This skill is already added' }));
+      return;
+    }
+    
+    // Check maximum limit
+    if (formData.skills.length >= 20) {
+      setErrors(prev => ({ ...prev, skillInput: 'Maximum 20 skills allowed' }));
+      return;
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      skills: [...prev.skills, trimmedSkill]
+    }));
+    setSkillInput('');
+    setErrors(prev => ({ ...prev, skillInput: '', skills: '' }));
   };
 
   const handleRemoveSkill = (skillToRemove) => {
@@ -177,30 +202,11 @@ const CareerForm = () => {
   };
 
   const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.title.trim()) {
-      newErrors.title = 'Job title is required';
-    }
-
-    if (!formData.location.trim()) {
-      newErrors.location = 'Location is required';
-    }
-
-    if (!formData.description.trim()) {
-      newErrors.description = 'Job description is required';
-    }
-
-    if (formData.skills.length === 0) {
-      newErrors.skills = 'At least one skill is required';
-    }
-
-    if (formData.requirements.filter(req => req.trim()).length === 0) {
-      newErrors.requirements = 'At least one requirement is required';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const sanitizedData = sanitizeCareerData(formData);
+    const validation = validateCareerForm(sanitizedData);
+    
+    setErrors(validation.errors);
+    return validation.isValid;
   };
 
   const handleSubmit = async (e) => {
@@ -215,13 +221,7 @@ const CareerForm = () => {
     });
 
     try {
-      // Clean up data (remove empty strings)
-      const cleanedData = {
-        ...formData,
-        requirements: formData.requirements.filter(req => req.trim()),
-        responsibilities: formData.responsibilities.filter(resp => resp.trim()),
-        benefits: formData.benefits.filter(benefit => benefit.trim())
-      };
+      const sanitizedData = sanitizeCareerData(formData);
 
       const url = isEditing 
         ? `${BACKEND_URL}/api/careers/${id}` 
@@ -233,7 +233,7 @@ const CareerForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(cleanedData),
+        body: JSON.stringify(sanitizedData),
       });
 
       const data = await response.json();
@@ -445,14 +445,24 @@ const CareerForm = () => {
                 rows={6}
                 value={formData.description}
                 onChange={handleInputChange}
+                maxLength={2000}
                 className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors duration-200 ${
                   errors.description ? 'border-red-300 bg-red-50' : 'border-slate-300'
                 }`}
                 placeholder="Describe the role, team, and what the candidate will be working on..."
               />
-              {errors.description && (
-                <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-              )}
+              <div className="flex justify-between items-center mt-1">
+                {errors.description ? (
+                  <p className="text-sm text-red-600">{errors.description}</p>
+                ) : (
+                  <div></div>
+                )}
+                <span className={`text-xs ${
+                  formData.description.length > 1800 ? 'text-red-500' : 'text-slate-500'
+                }`}>
+                  {formData.description.length}/2000
+                </span>
+              </div>
             </div>
 
             {/* Requirements */}
@@ -465,6 +475,7 @@ const CareerForm = () => {
                       type="text"
                       value={requirement}
                       onChange={(e) => handleRequirementChange(index, e.target.value)}
+                      maxLength={200}
                       className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                       placeholder="Enter requirement..."
                     />
@@ -506,6 +517,7 @@ const CareerForm = () => {
                       type="text"
                       value={responsibility}
                       onChange={(e) => handleResponsibilityChange(index, e.target.value)}
+                      maxLength={200}
                       className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                       placeholder="Enter responsibility..."
                     />
@@ -544,6 +556,7 @@ const CareerForm = () => {
                       type="text"
                       value={benefit}
                       onChange={(e) => handleBenefitChange(index, e.target.value)}
+                      maxLength={200}
                       className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                       placeholder="Enter benefit..."
                     />
@@ -598,10 +611,18 @@ const CareerForm = () => {
                 <input
                   type="text"
                   value={skillInput}
-                  onChange={(e) => setSkillInput(e.target.value)}
+                  onChange={(e) => {
+                    setSkillInput(e.target.value);
+                    if (errors.skillInput) {
+                      setErrors(prev => ({ ...prev, skillInput: '' }));
+                    }
+                  }}
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddSkill())}
-                  className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  className={`flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary ${
+                    errors.skillInput ? 'border-red-300 bg-red-50' : 'border-slate-300'
+                  }`}
                   placeholder="Add skill..."
+                  maxLength={50}
                 />
                 <Button
                   type="button"
@@ -612,6 +633,10 @@ const CareerForm = () => {
                   iconSize={14}
                 />
               </div>
+              
+              {errors.skillInput && (
+                <p className="mb-2 text-sm text-red-600">{errors.skillInput}</p>
+              )}
 
               <div className="flex flex-wrap gap-2">
                 {formData.skills.map((skill, index) => (

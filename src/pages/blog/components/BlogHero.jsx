@@ -23,21 +23,21 @@ const BlogHero = () => {
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight px-4">
             Insights &<span className="brand-gradient-text"> Innovation</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-slate-600 mb-8 leading-relaxed max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 mb-6 sm:mb-8 leading-relaxed max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto px-4">
             Discover the latest trends, technical deep-dives, and strategic
             insights that drive digital transformation success.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
             <Button
               variant="default"
-              className="cta-button text-white font-medium"
+              className="cta-button text-white font-medium w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg"
               iconName="Mail"
               iconPosition="left"
               iconSize={16}
