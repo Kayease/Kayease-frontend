@@ -75,6 +75,18 @@ export const contactApi = {
     return handleResponse(response);
   },
 
+  // Mark contact as read/unread (Admin only)
+  markAsRead: async (id, isRead = true) => {
+    const response = await fetch(`${API_BASE_URL}/api/contacts/${id}/read`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ isRead }),
+    });
+    return handleResponse(response);
+  },
+
   // Delete contact (Admin only)
   delete: async (id) => {
     const response = await fetch(`${API_BASE_URL}/api/contacts/${id}`, {

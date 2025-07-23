@@ -7,7 +7,7 @@ const TeamSpotlight = () => {
     chanda: "/team/chanda.png",
     pp: "/team/pp.png",
     rustam: "/team/rustam.png",
-    manish: "/team/no_image.png", // fallback since manish.png does not exist
+    manish: "/team/manish.png", // fallback since manish.png does not exist
     sunny: "/team/sunny.png",
     amit: "/team/amit.png",
   };

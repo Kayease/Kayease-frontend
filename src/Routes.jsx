@@ -28,6 +28,7 @@ import PortfolioForm from "pages/admin/PortfolioForm";
 import PortfolioDetail from "pages/PortfolioDetail";
 import ClientForm from "pages/admin/ClientForm";
 import ClientList from "pages/admin/ClientList";
+import ContactManagement from "pages/admin/ContactManagement";
 import TestData from "pages/TestData";
 import SimpleCareerTest from "pages/SimpleCareerTest";
 import NotFound from "pages/NotFound";
@@ -175,6 +176,14 @@ const AppLayout = () => {
           element={
             <ProtectedRoute>
               <ClientForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/contacts"
+          element={
+            <ProtectedRoute>
+              <ContactManagement />
             </ProtectedRoute>
           }
         />

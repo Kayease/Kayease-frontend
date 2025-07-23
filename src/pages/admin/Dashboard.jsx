@@ -634,6 +634,82 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* Contact Statistics */}
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative">
+            {isLoadingStats && (
+              <div className="absolute inset-0 bg-white/80 rounded-xl flex items-center justify-center">
+                <Icon name="Loader2" size={20} className="animate-spin text-primary" />
+              </div>
+            )}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <Icon
+                    name="Mail"
+                    size={20}
+                    className="text-indigo-600"
+                  />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-800">
+                    Contact Inquiries
+                  </h3>
+                  <p className="text-2xl font-bold text-slate-800">
+                    {stats.contacts.total}
+                  </p>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/admin/contacts")}
+                iconName="ArrowRight"
+                iconPosition="right"
+                iconSize={14}
+              >
+                Manage
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-slate-600">New</span>
+                </div>
+                <span className="font-medium text-slate-800">
+                  {stats.contacts.new}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                  <span className="text-slate-600">Contacted</span>
+                </div>
+                <span className="font-medium text-slate-800">
+                  {stats.contacts.contacted}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <span className="text-slate-600">In Progress</span>
+                </div>
+                <span className="font-medium text-slate-800">
+                  {stats.contacts.inProgress}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-slate-600">Closed</span>
+                </div>
+                <span className="font-medium text-slate-800">
+                  {stats.contacts.closed}
+                </span>
+              </div>
+            </div>
+          </div>
 
         </div>
 

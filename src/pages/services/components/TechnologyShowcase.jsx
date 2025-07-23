@@ -1,142 +1,349 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import Icon from '../../../components/AppIcon';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import Icon from "../../../components/AppIcon";
 
 const TechnologyShowcase = () => {
-  const [activeCategory, setActiveCategory] = useState('frontend');
+  const [activeCategory, setActiveCategory] = useState("frontend");
 
   const techCategories = [
     {
-      id: 'frontend',
-      name: 'Frontend',
-      icon: 'Monitor',
-      description: 'Modern frameworks for exceptional user experiences',
+      id: "frontend",
+      name: "Frontend",
+      icon: "Monitor",
       technologies: [
         {
-          name: 'Next.js',
-          description: 'React framework for production-grade applications with SSR, SSG, and optimal performance',
-          reasons: ['Server-side rendering', 'Automatic code splitting', 'Built-in optimization', 'SEO-friendly'],
-          logo: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=100&h=100&fit=crop&crop=center'
+          name: "HTML5",
+          description:
+            "Markup language for structuring and presenting content on the web.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
         },
         {
-          name: 'React',
-          description: 'Component-based library for building interactive user interfaces',
-          reasons: ['Component reusability', 'Virtual DOM performance', 'Large ecosystem', 'Developer experience'],
-          logo: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=100&h=100&fit=crop&crop=center'
+          name: "CSS3",
+          description:
+            "Style sheet language for designing visually engaging web pages.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
         },
         {
-          name: 'Tailwind CSS',
-          description: 'Utility-first CSS framework for rapid UI development',
-          reasons: ['Rapid development', 'Consistent design', 'Small bundle size', 'Customizable'],
-          logo: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=100&h=100&fit=crop&crop=center'
+          name: "JavaScript",
+          description:
+            "High-level programming language for interactive web applications.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
         },
         {
-          name: 'Framer Motion',
-          description: 'Production-ready motion library for React applications',
-          reasons: ['Smooth animations', 'Gesture support', 'Layout animations', 'Performance optimized'],
-          logo: 'https://images.unsplash.com/photo-1558655146-364adaf1fcc9?w=100&h=100&fit=crop&crop=center'
-        }
+          name: "React.js",
+          description:
+            "JavaScript library for building user interfaces with reusable components.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+        },
+        {
+          name: "Vue.js",
+          description:
+            "Progressive JavaScript framework for building user interfaces.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg",
+        },
+        {
+          name: "Angular",
+          description:
+            "TypeScript-based open-source web application framework.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg",
+        },
+        {
+          name: "Next.js",
+          description:
+            "React framework for server-side rendering and static site generation.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+        },
+        {
+          name: "Tailwind CSS",
+          description: "Utility-first CSS framework for rapid UI development.",
+          logo: "/tech/tailwind.svg",
+        },
+        {
+          name: "Bootstrap",
+          description:
+            "Popular CSS framework for responsive, mobile-first web development.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg",
+        },
+        {
+          name: "SASS/SCSS",
+          description:
+            "CSS preprocessor for writing maintainable and scalable styles.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg",
+        },
+        {
+          name: "TypeScript",
+          description:
+            "Typed superset of JavaScript that compiles to plain JavaScript.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+        },
+        {
+          name: "jQuery",
+          description: "Fast, small, and feature-rich JavaScript library.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jquery/jquery-original.svg",
+        },
+        {
+          name: "Redux / Zustand / Recoil",
+          description:
+            "State management libraries for predictable and scalable app state.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg",
+        },
+        {
+          name: "Figma",
+          description: "Collaborative interface design tool for UI/UX design.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
+        },
+      ],
+    },
+    {
+      id: "backend",
+      name: "Backend",
+      icon: "Server",
+      technologies: [
+        {
+          name: "Node.js",
+          description:
+            "JavaScript runtime built on Chrome's V8 JavaScript engine.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+        },
+        {
+          name: "Express.js",
+          description:
+            "Fast, unopinionated, minimalist web framework for Node.js.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg",
+        },
+        {
+          name: "Django",
+          description:
+            "High-level Python Web framework that encourages rapid development and clean, pragmatic design.",
+          logo: "/tech/Django.svg",
+        },
+        {
+          name: "Flask",
+          description:
+            "Micro web framework for Python based on Werkzeug, Jinja2 and good intentions.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg",
+        },
+        {
+          name: "Spring Boot",
+          description:
+            "Framework for creating stand-alone, production-grade Spring-based applications.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg",
+        },
+        {
+          name: "Laravel",
+          description:
+            "PHP framework for building web applications following the MVC pattern.",
+          logo: "/tech/Laravel.svg",
+        },
+        {
+          name: "GraphQL / REST APIs",
+          description:
+            "API standard for data fetching and manipulation, often over HTTP.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg",
+        },
+        {
+          name: "MongoDB / PostgreSQL / MySQL",
+          description:
+            "Open-source document databases with the scalability and flexibility.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
+        },
+        {
+          name: "Socket.io",
+          description:
+            "Library for real-time, bidirectional and event-based communication.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/socketio/socketio-original.svg",
+        },
+      ],
+    },
+    {
+      id: "mobile",
+      name: "Mobile",
+      icon: "Smartphone",
+      technologies: [
+        {
+          name: "React Native",
+          description: "Framework for building native apps using React.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+        },
+        {
+          name: "Flutter",
+          description:
+            "UI software development kit for building natively compiled applications for mobile, web, and desktop from a single codebase.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg",
+        },
+        {
+          name: "Swift",
+          description:
+            "General-purpose, multi-paradigm, compiled programming language developed by Apple Inc.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg",
+        },
+        {
+          name: "Kotlin",
+          description:
+            "Statically typed, general-purpose programming language.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg",
+        },
+        {
+          name: "Firebase",
+          description: "Platform for building mobile and web applications.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
+        },
+        {
+          name: "Expo",
+          description:
+            "Framework and platform for universal React applications.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/expo/expo-original.svg",
+        },
+      ],
+    },
+   
+    {
+      id: "databases",
+      name: "Databases",
+      icon: "Database",
+      technologies: [
+        {
+          name: "MongoDB",
+          description:
+            "NoSQL database that stores data in a flexible, JSON-like format.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
+        },
+        {
+          name: "PostgreSQL",
+          description: "Open-source object-relational database system.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
+        },
+        {
+          name: "MySQL",
+          description: "Open-source relational database management system.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
+        },
+        {
+          name: "Redis",
+          description:
+            "In-memory data structure store, used as a database, cache, and message broker.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg",
+        },
+        {
+          name: "Firebase Firestore",
+          description:
+            "NoSQL cloud database for building scalable applications.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
+        },
+        {
+          name: "SQLite",
+          description:
+            "Lightweight, serverless, and self-contained database engine.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg",
+        },
+        {
+          name: "Supabase",
+          description:
+            "Open-source Firebase alternative for building web and mobile applications.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg",
+        },
+      ],
+    },
+    {
+      id: "tools",
+      name: "Tools & Utilities",
+      icon: "Tool",
+      technologies: [
+        {
+          name: 'Git',
+          description: 'Distributed version control system for tracking code changes.',
+          logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg'
+        },
+        {
+          name: 'GitHub / GitLab / Bitbucket',
+          description: 'Popular platforms for hosting and collaborating on code repositories.',
+          logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg'
+        },
+        {
+          name: 'VS Code',
+          description: 'Powerful, extensible code editor for developers.',
+          logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg'
+        },
+        {
+          name: 'Postman',
+          description: 'API development and testing tool for building and using APIs.',
+          logo: 'https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg'
+        },
+        
+        {
+          name: 'Adobe Photoshop',
+          description: 'Industry-standard software for photo editing and graphic design.',
+          logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg'
+        },
+        {
+          name: 'Adobe Illustrator',
+          description: 'Vector graphics editor for creating illustrations and artwork.',
+          logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg'
+        },
+        {
+          name: 'Adobe XD',
+          description: 'UI/UX design and prototyping tool for web and mobile apps.',
+          logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xd/xd-plain.svg'
+        },
+        {
+          name: 'Sketch',
+          description: 'Vector graphics editor for UI, mobile, and web design.',
+          logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sketch/sketch-original.svg'
+        },
+        {
+          name: 'Canva',
+          description: 'Online design tool for creating graphics, presentations, and more.',
+          logo: 'https://cdn.worldvectorlogo.com/logos/canva-1.svg'
+        },
+        {
+          name: 'Notion',
+          description: 'All-in-one workspace for notes, tasks, wikis, and databases.',
+          logo: 'https://cdn.worldvectorlogo.com/logos/notion-2.svg'
+        },
+        {
+          name: 'Slack',
+          description: 'Messaging app for teams and workplace communication.',
+          logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/slack/slack-original.svg'
+        },
+        {
+          name: 'Trello',
+          description: 'Visual project management tool using boards, lists, and cards.',
+          logo: 'https://cdn.worldvectorlogo.com/logos/trello.svg'
+        },
       ]
     },
     {
-      id: 'backend',
-      name: 'Backend',
-      icon: 'Server',
-      description: 'Scalable server solutions and APIs',
+      id: "uiux",
+      name: "UI/UX & Design",
+      icon: "PenTool",
       technologies: [
         {
-          name: 'Node.js',
-          description: 'JavaScript runtime for building scalable server-side applications',
-          reasons: ['JavaScript everywhere', 'High performance', 'Rich ecosystem', 'Real-time capabilities'],
-          logo: 'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=100&h=100&fit=crop&crop=center'
+          name: "Figma",
+          description: "Collaborative interface design tool for UI/UX design.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
         },
         {
-          name: 'Express.js',
-          description: 'Fast, unopinionated web framework for Node.js',
-          reasons: ['Minimal setup', 'Flexible routing', 'Middleware support', 'Large community'],
-          logo: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=100&h=100&fit=crop&crop=center'
+          name: "Adobe XD",
+          description: "Professional design tool for user experience design.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xd/xd-original.svg",
         },
         {
-          name: 'PostgreSQL',
-          description: 'Advanced open-source relational database system',
-          reasons: ['ACID compliance', 'Advanced features', 'Scalability', 'JSON support'],
-          logo: 'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=100&h=100&fit=crop&crop=center'
+          name: "Storybook",
+          description:
+            "Open-source tool for developing UI components in isolation.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/storybook/storybook-original.svg",
         },
         {
-          name: 'Redis',
-          description: 'In-memory data structure store for caching and sessions',
-          reasons: ['High performance', 'Data persistence', 'Pub/Sub messaging', 'Clustering support'],
-          logo: 'https://images.unsplash.com/photo-1558655146-364adaf1fcc9?w=100&h=100&fit=crop&crop=center'
-        }
-      ]
+          name: "Chakra UI",
+          description:
+            "Component library for building accessible, production-ready, and beautiful React applications.",
+          logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/chakraui/chakraui-original.svg",
+        },
+      ],
     },
-    {
-      id: 'mobile',
-      name: 'Mobile',
-      icon: 'Smartphone',
-      description: 'Cross-platform mobile development',
-      technologies: [
-        {
-          name: 'React Native',
-          description: 'Build native mobile apps using React and JavaScript',
-          reasons: ['Code reusability', 'Native performance', 'Hot reloading', 'Large community'],
-          logo: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=100&h=100&fit=crop&crop=center'
-        },
-        {
-          name: 'Expo',
-          description: 'Platform for universal React applications',
-          reasons: ['Rapid development', 'OTA updates', 'Rich APIs', 'Easy deployment'],
-          logo: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=100&h=100&fit=crop&crop=center'
-        },
-        {
-          name: 'Firebase',
-          description: 'Backend-as-a-Service platform for mobile and web apps',
-          reasons: ['Real-time database', 'Authentication', 'Push notifications', 'Analytics'],
-          logo: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?w=100&h=100&fit=crop&crop=center'
-        },
-        {
-          name: 'Redux Toolkit',
-          description: 'Efficient Redux development with modern patterns',
-          reasons: ['State management', 'DevTools integration', 'Immutable updates', 'Middleware support'],
-          logo: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=100&h=100&fit=crop&crop=center'
-        }
-      ]
-    },
-    {
-      id: 'devops',
-      name: 'DevOps',
-      icon: 'Settings',
-      description: 'Deployment and infrastructure management',
-      technologies: [
-        {
-          name: 'Vercel',
-          description: 'Frontend cloud platform for static sites and serverless functions',
-          reasons: ['Zero configuration', 'Global CDN', 'Automatic scaling', 'Git integration'],
-          logo: 'https://images.unsplash.com/photo-1558655146-364adaf1fcc9?w=100&h=100&fit=crop&crop=center'
-        },
-        {
-          name: 'AWS',
-          description: 'Comprehensive cloud computing platform',
-          reasons: ['Scalable infrastructure', 'Global presence', 'Managed services', 'Security'],
-          logo: 'https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?w=100&h=100&fit=crop&crop=center'
-        },
-        {
-          name: 'Docker',
-          description: 'Containerization platform for consistent deployments',
-          reasons: ['Environment consistency', 'Easy scaling', 'Resource efficiency', 'Microservices'],
-          logo: 'https://images.unsplash.com/photo-1605745341112-85968b19335a?w=100&h=100&fit=crop&crop=center'
-        },
-        {
-          name: 'GitHub Actions',
-          description: 'CI/CD platform for automated workflows',
-          reasons: ['Automated testing', 'Continuous deployment', 'Git integration', 'Custom workflows'],
-          logo: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=100&h=100&fit=crop&crop=center'
-        }
-      ]
-    }
   ];
 
-  const activeData = techCategories.find(cat => cat.id === activeCategory);
+  const activeData = techCategories.find((cat) => cat.id === activeCategory);
 
   return (
     <section className="py-20 bg-white">
@@ -157,8 +364,8 @@ const TechnologyShowcase = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl text-slate-600 max-w-3xl mx-auto"
           >
-            We carefully select cutting-edge technologies that deliver exceptional 
-            performance, scalability, and maintainability.
+            We carefully select cutting-edge technologies that deliver
+            exceptional performance, scalability, and maintainability.
           </motion.p>
         </div>
 
@@ -173,8 +380,8 @@ const TechnologyShowcase = () => {
               onClick={() => setActiveCategory(category.id)}
               className={`flex items-center space-x-3 px-6 py-3 rounded-full border-2 transition-all duration-300 ${
                 activeCategory === category.id
-                  ? 'bg-blue-500 border-blue-500 text-white shadow-lg'
-                  : 'bg-white border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-blue-50'
+                  ? "bg-blue-500 border-blue-500 text-white shadow-lg"
+                  : "bg-white border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-blue-50"
               }`}
             >
               <Icon name={category.icon} size={20} />
@@ -192,44 +399,29 @@ const TechnologyShowcase = () => {
           className="mb-12"
         >
           <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">{activeData.name} Technologies</h3>
-            <p className="text-slate-600">{activeData.description}</p>
+            <h3 className="text-2xl font-bold text-slate-900 mb-2">
+              {activeData.name} Technologies
+            </h3>
+            {/* No description for new categories */}
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {activeData.technologies.map((tech, index) => (
-              <motion.div
+              <div
                 key={tech.name}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-slate-50 rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:bg-white border border-slate-200 hover:border-blue-200 h-full flex flex-col"
+                className="bg-slate-50 rounded-xl p-6 flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 hover:bg-white border border-slate-200 hover:border-blue-200 h-full"
               >
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                    <Icon name="Code" size={24} color="white" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-slate-900">{tech.name}</h4>
-                  </div>
-                </div>
-
-                <p className="text-sm text-slate-600 mb-4 leading-relaxed flex-grow">
-                  {tech.description}
-                </p>
-
-                <div className="mt-auto">
-                  <h5 className="font-semibold text-slate-900 mb-2 text-sm">Why we choose it:</h5>
-                  <ul className="space-y-1">
-                    {tech.reasons.map((reason, reasonIndex) => (
-                      <li key={reasonIndex} className="flex items-center text-xs text-slate-600">
-                        <Icon name="Check" size={12} className="text-green-500 mr-2 flex-shrink-0" />
-                        {reason}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </motion.div>
+                <img
+                  src={tech.logo}
+                  alt={tech.name + " logo"}
+                  className="w-12 h-12 mb-3 object-contain"
+                  onError={e => { e.target.onerror = null; e.target.src = 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/code/code-original.svg'; }}
+                />
+                <h4 className="font-bold text-slate-900 mb-1 text-base">
+                  {tech.name}
+                </h4>
+                <p className="text-xs text-slate-600">{tech.description}</p>
+              </div>
             ))}
           </div>
         </motion.div>
@@ -247,26 +439,31 @@ const TechnologyShowcase = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                icon: 'Zap',
-                title: 'Performance First',
-                description: 'Optimized for speed and efficiency with modern build tools and best practices'
+                icon: "Zap",
+                title: "Performance First",
+                description:
+                  "Optimized for speed and efficiency with modern build tools and best practices",
               },
               {
-                icon: 'Shield',
-                title: 'Enterprise Security',
-                description: 'Built-in security features and regular updates to protect your applications'
+                icon: "Shield",
+                title: "Enterprise Security",
+                description:
+                  "Built-in security features and regular updates to protect your applications",
               },
               {
-                icon: 'TrendingUp',
-                title: 'Future-Proof',
-                description: 'Technologies with strong community support and long-term viability'
-              }
+                icon: "TrendingUp",
+                title: "Future-Proof",
+                description:
+                  "Technologies with strong community support and long-term viability",
+              },
             ].map((benefit, index) => (
               <div key={index} className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <Icon name={benefit.icon} size={24} color="white" />
                 </div>
-                <h4 className="font-semibold text-slate-900 mb-2">{benefit.title}</h4>
+                <h4 className="font-semibold text-slate-900 mb-2">
+                  {benefit.title}
+                </h4>
                 <p className="text-slate-600 text-sm">{benefit.description}</p>
               </div>
             ))}

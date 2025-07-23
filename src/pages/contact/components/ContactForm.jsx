@@ -17,7 +17,6 @@ const ContactForm = () => {
     budget: '',
     timeline: '',
     message: '',
-    newsletter: false,
     terms: false
   });
 
@@ -113,7 +112,6 @@ const ContactForm = () => {
         budget: '',
         timeline: '',
         message: '',
-        newsletter: false,
         terms: false
       });
       
@@ -246,14 +244,7 @@ const ContactForm = () => {
         </div>
 
         <div className="space-y-4">
-          <Checkbox
-            label="Subscribe to our newsletter for updates and insights"
-            checked={formData.newsletter}
-            onChange={(e) => handleInputChange(e)}
-            name="newsletter"
-            description="Get the latest news about digital trends and our services"
-          />
-
+         
           <Checkbox
             label="I agree to the Terms of Service and Privacy Policy"
             checked={formData.terms}

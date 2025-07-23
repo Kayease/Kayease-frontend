@@ -392,6 +392,9 @@ const ContactManagement = () => {
                         Priority
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        Read
+                      </th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                         Date
                       </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
@@ -456,6 +459,16 @@ const ContactManagement = () => {
                             ))}
                           </select>
                         </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${
+                            contact.isRead 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            <Icon name={contact.isRead ? "CheckCircle" : "Circle"} size={12} />
+                            <span>{contact.isRead ? 'Read' : 'Unread'}</span>
+                          </div>
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
                           {formatDate(contact.createdAt)}
                         </td>
@@ -476,6 +489,13 @@ const ContactManagement = () => {
                               size="sm"
                               onClick={() => window.open(`mailto:${contact.email}`)}
                               iconName="Mail"
+                              iconSize={14}
+                            />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => window.open(`tel:${contact.phone}`)}
+                              iconName="Phone"
                               iconSize={14}
                             />
                           </div>
@@ -562,176 +582,284 @@ const ContactManagement = () => {
   );
 };
 
-// Contact Detail Modal Component
+// Enhanced Contact Detail Modal Component
 const ContactDetailModal = ({ contact, onClose, onUpdate }) => {
-  const [notes, setNotes] = useState(contact.notes || '');
-  const [assignedTo, setAssignedTo] = useState(contact.assignedTo || '');
-  const [followUpDate, setFollowUpDate] = useState(
-    contact.followUpDate ? new Date(contact.followUpDate).toISOString().split('T')[0] : ''
-  );
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const handleUpdate = async () => {
+  const handleMarkAsRead = async () => {
     try {
       setIsUpdating(true);
-      await contactApi.update(contact._id, {
-        notes,
-        assignedTo,
-        followUpDate: followUpDate ? new Date(followUpDate) : null
-      });
-      toast.success('Contact updated successfully');
+      await contactApi.markAsRead(contact._id, !contact.isRead);
+      toast.success(`Contact marked as ${contact.isRead ? 'unread' : 'read'}`);
       onUpdate();
-      onClose();
     } catch (error) {
-      console.error('Error updating contact:', error);
-      toast.error('Failed to update contact');
+      console.error('Error updating contact read status:', error);
+      toast.error('Failed to update contact status');
     } finally {
       setIsUpdating(false);
     }
   };
 
+  const handleReplyToClient = () => {
+    const subject = `Re: ${contactApi.formatContactData(contact).projectTypeLabel} Project Inquiry`;
+    const body = `Hi ${contact.name},\n\nThank you for your interest in our services.\n\nBest regards,\nKayease Team`;
+    const mailtoUrl = `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(mailtoUrl);
+  };
+
+  const handleCallClient = () => {
+    window.open(`tel:${contact.phone}`);
+  };
+
+  const getStatusBadgeColor = (status) => {
+    const colors = {
+      'new': 'bg-blue-50 text-blue-700 border-blue-200',
+      'contacted': 'bg-yellow-50 text-yellow-700 border-yellow-200',
+      'in-progress': 'bg-purple-50 text-purple-700 border-purple-200',
+      'quoted': 'bg-orange-50 text-orange-700 border-orange-200',
+      'closed': 'bg-green-50 text-green-700 border-green-200',
+      'archived': 'bg-gray-50 text-gray-700 border-gray-200'
+    };
+    return colors[status] || 'bg-gray-50 text-gray-700 border-gray-200';
+  };
+
+  const getPriorityBadgeColor = (priority) => {
+    const colors = {
+      'low': 'bg-gray-50 text-gray-700 border-gray-200',
+      'medium': 'bg-blue-50 text-blue-700 border-blue-200',
+      'high': 'bg-orange-50 text-orange-700 border-orange-200',
+      'urgent': 'bg-red-50 text-red-700 border-red-200'
+    };
+    return colors[priority] || 'bg-gray-50 text-gray-700 border-gray-200';
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-slate-200">
-          <h2 className="text-xl font-semibold text-slate-900">Contact Details</h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            iconName="X"
-            iconSize={20}
-          />
-        </div>
-
-        <div className="p-6 space-y-6">
-          {/* Contact Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-medium text-slate-900 mb-4">Contact Information</h3>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-sm font-medium text-slate-600">Name</label>
-                  <p className="text-sm text-slate-900">{contact.name}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-slate-600">Email</label>
-                  <p className="text-sm text-slate-900">{contact.email}</p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-slate-600">Phone</label>
-                  <p className="text-sm text-slate-900">{contact.phone}</p>
-                </div>
-                {contact.company && (
-                  <div>
-                    <label className="text-sm font-medium text-slate-600">Company</label>
-                    <p className="text-sm text-slate-900">{contact.company}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-medium text-slate-900 mb-4">Project Details</h3>
-              <div className="space-y-3">
-                <div>
-                  <label className="text-sm font-medium text-slate-600">Project Type</label>
-                  <p className="text-sm text-slate-900">
-                    {contactApi.formatContactData(contact).projectTypeLabel}
-                  </p>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-slate-600">Budget</label>
-                  <p className="text-sm text-slate-900">
-                    {contactApi.formatContactData(contact).budgetLabel}
-                  </p>
-                </div>
-                {contact.timeline && (
-                  <div>
-                    <label className="text-sm font-medium text-slate-600">Timeline</label>
-                    <p className="text-sm text-slate-900">
-                      {contactApi.formatContactData(contact).timelineLabel}
-                    </p>
-                  </div>
-                )}
-                <div>
-                  <label className="text-sm font-medium text-slate-600">Newsletter</label>
-                  <p className="text-sm text-slate-900">{contact.newsletter ? 'Yes' : 'No'}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Message */}
-          <div>
-            <h3 className="text-lg font-medium text-slate-900 mb-4">Project Description</h3>
-            <div className="bg-slate-50 rounded-lg p-4">
-              <p className="text-sm text-slate-700 whitespace-pre-wrap">{contact.message}</p>
-            </div>
-          </div>
-
-          {/* Management Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Assigned To
-              </label>
-              <Input
-                type="text"
-                value={assignedTo}
-                onChange={(e) => setAssignedTo(e.target.value)}
-                placeholder="Enter assignee name"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Follow-up Date
-              </label>
-              <Input
-                type="date"
-                value={followUpDate}
-                onChange={(e) => setFollowUpDate(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Created
-              </label>
-              <p className="text-sm text-slate-900 pt-2">
-                {new Date(contact.createdAt).toLocaleString()}
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-2xl max-w-5xl w-full max-h-[95vh] overflow-hidden shadow-2xl border border-slate-200">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-primary to-primary/80 text-white p-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <h2 className="text-2xl font-bold">Contact Details</h2>
+              <p className="text-primary-100 text-sm">
+                Received {new Date(contact.createdAt).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
               </p>
             </div>
-          </div>
-
-          {/* Notes */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              Internal Notes
-            </label>
-            <textarea
-              rows={4}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-              placeholder="Add internal notes about this contact..."
-            />
+            <div className="flex items-center space-x-3">
+              {/* Read Status Indicator */}
+              <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium border ${
+                contact.isRead 
+                  ? 'bg-green-100 text-green-800 border-green-200' 
+                  : 'bg-red-100 text-red-800 border-red-200'
+              }`}>
+                <Icon name={contact.isRead ? "CheckCircle" : "Circle"} size={12} />
+                <span>{contact.isRead ? 'Read' : 'Unread'}</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onClose}
+                className="text-white hover:bg-white/20"
+                iconName="X"
+                iconSize={20}
+              />
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-end space-x-4 p-6 border-t border-slate-200">
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            onClick={handleUpdate}
-            loading={isUpdating}
-            iconName="Save"
-            iconPosition="left"
-          >
-            Save Changes
-          </Button>
+        {/* Content */}
+        <div className="overflow-y-auto max-h-[calc(95vh-200px)]">
+          <div className="p-6 space-y-8">
+            {/* Status and Priority Badges */}
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+              <div className="flex flex-wrap items-center gap-3">
+                <div className={`px-4 py-2 rounded-full text-sm font-medium border ${getStatusBadgeColor(contact.status)}`}>
+                  <Icon name="Tag" size={14} className="inline mr-2" />
+                  {contact.status.charAt(0).toUpperCase() + contact.status.slice(1).replace('-', ' ')}
+                </div>
+                <div className={`px-4 py-2 rounded-full text-sm font-medium border ${getPriorityBadgeColor(contact.priority)}`}>
+                  <Icon name="Flag" size={14} className="inline mr-2" />
+                  {contact.priority.charAt(0).toUpperCase() + contact.priority.slice(1)} Priority
+                </div>
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleMarkAsRead}
+                  loading={isUpdating}
+                  iconName={contact.isRead ? "Eye" : "EyeOff"}
+                  iconSize={16}
+                  className="text-slate-600 hover:text-primary border-slate-300"
+                >
+                  Mark as {contact.isRead ? 'Unread' : 'Read'}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCallClient}
+                  iconName="Phone"
+                  iconSize={16}
+                  className="text-green-600 hover:text-green-700 border-green-300 hover:bg-green-50"
+                >
+                  Call Client
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={handleReplyToClient}
+                  iconName="Mail"
+                  iconSize={16}
+                  className="bg-primary hover:bg-primary/90 text-white"
+                >
+                  Reply to Client
+                </Button>
+              </div>
+            </div>
+
+            {/* Contact Information Cards */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              {/* Personal Information */}
+              <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Icon name="User" size={20} className="text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-900">Contact Information</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <Icon name="User" size={16} className="text-slate-500 mt-1" />
+                    <div>
+                      <p className="text-sm font-medium text-slate-600">Full Name</p>
+                      <p className="text-base text-slate-900 font-medium">{contact.name}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Icon name="Mail" size={16} className="text-slate-500 mt-1" />
+                    <div>
+                      <p className="text-sm font-medium text-slate-600">Email Address</p>
+                      <p className="text-base text-slate-900 break-all">{contact.email}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Icon name="Phone" size={16} className="text-slate-500 mt-1" />
+                    <div>
+                      <p className="text-sm font-medium text-slate-600">Phone Number</p>
+                      <p className="text-base text-slate-900">{contact.phone}</p>
+                    </div>
+                  </div>
+                  {contact.company && (
+                    <div className="flex items-start space-x-3">
+                      <Icon name="Building2" size={16} className="text-slate-500 mt-1" />
+                      <div>
+                        <p className="text-sm font-medium text-slate-600">Company</p>
+                        <p className="text-base text-slate-900">{contact.company}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Project Information */}
+              <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl p-6 border border-primary/20">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+                    <Icon name="Briefcase" size={20} className="text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-900">Project Details</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <Icon name="Code" size={16} className="text-primary/70 mt-1" />
+                    <div>
+                      <p className="text-sm font-medium text-slate-600">Project Type</p>
+                      <p className="text-base text-slate-900 font-medium">
+                        {contactApi.formatContactData(contact).projectTypeLabel}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <Icon name="DollarSign" size={16} className="text-primary/70 mt-1" />
+                    <div>
+                      <p className="text-sm font-medium text-slate-600">Budget Range</p>
+                      <p className="text-base text-slate-900 font-medium">
+                        {contactApi.formatContactData(contact).budgetLabel}
+                      </p>
+                    </div>
+                  </div>
+                  {contact.timeline && (
+                    <div className="flex items-start space-x-3">
+                      <Icon name="Calendar" size={16} className="text-primary/70 mt-1" />
+                      <div>
+                        <p className="text-sm font-medium text-slate-600">Timeline</p>
+                        <p className="text-base text-slate-900 font-medium">
+                          {contactApi.formatContactData(contact).timelineLabel}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Project Description */}
+            <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <Icon name="MessageSquare" size={20} className="text-purple-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900">Project Description</h3>
+              </div>
+              <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
+                <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">{contact.message}</p>
+              </div>
+            </div>
+
+            {/* Technical Information */}
+            <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <Icon name="Info" size={20} className="text-gray-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-slate-900">Technical Information</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                  <p className="font-medium text-slate-600 mb-1">Source</p>
+                  <p className="text-slate-900">{contact.source || 'Website'}</p>
+                </div>
+                <div>
+                  <p className="font-medium text-slate-600 mb-1">IP Address</p>
+                  <p className="text-slate-900 font-mono text-xs">{contact.ipAddress || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="font-medium text-slate-600 mb-1">Submitted</p>
+                  <p className="text-slate-900">{new Date(contact.createdAt).toLocaleString()}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="bg-slate-50 px-6 py-4 border-t border-slate-200">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+            <div className="text-sm text-slate-500">
+              Contact ID: <span className="font-mono text-xs">{contact._id}</span>
+            </div>
+            <Button variant="outline" onClick={onClose} className="font-medium">
+              Close
+            </Button>
+          </div>
         </div>
       </div>
     </div>
