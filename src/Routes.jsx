@@ -16,7 +16,6 @@ import Portfolio from "pages/portfolio";
 import Services from "pages/services";
 import About from "pages/about";
 import Careers from "pages/careers";
-import CareersFixed from "pages/careers/CareersFixed";
 import Login from "pages/auth/Login";
 import Dashboard from "pages/admin/Dashboard";
 import BlogManagement from "pages/admin/BlogManagement";
@@ -25,12 +24,10 @@ import CareerManagement from "pages/admin/CareerManagement";
 import CareerForm from "pages/admin/CareerForm";
 import PortfolioManagement from "pages/admin/Portfolio";
 import PortfolioForm from "pages/admin/PortfolioForm";
-import PortfolioDetail from "pages/PortfolioDetail";
+import PortfolioDetail from "pages/portfolio/PortfolioDetail";
 import ClientForm from "pages/admin/ClientForm";
 import ClientList from "pages/admin/ClientList";
 import ContactManagement from "pages/admin/ContactManagement";
-import TestData from "pages/TestData";
-import SimpleCareerTest from "pages/SimpleCareerTest";
 import NotFound from "pages/NotFound";
 import Header from "components/ui/Header";
 import Footer from "components/ui/Footer";
@@ -68,10 +65,7 @@ const AppLayout = () => {
         <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
         <Route path="/services" element={<Services />} />
         <Route path="/about" element={<About />} />
-        <Route path="/careers" element={<CareersFixed />} />
-        <Route path="/careers-old" element={<Careers />} />
-        <Route path="/test-data" element={<TestData />} />
-        <Route path="/simple-career-test" element={<SimpleCareerTest />} />
+        <Route path="/careers" element={<Careers />} />
         <Route path="/login" element={<Login />} />
 
         {/* Protected Admin Routes */}
