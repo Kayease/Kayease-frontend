@@ -62,22 +62,25 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
             </div>
 
             {/* Content */}
-            <div className="flex h-[calc(90vh-120px)]">
+            <div className="flex flex-col md:flex-row h-[calc(90vh-120px)]">
               {/* Left Panel - Image Gallery */}
-              <div className="w-1/2 relative bg-gray-50">
-                <div className="relative h-full">
-                  <Image
-                    src={gallery[currentImageIndex]}
-                    alt={`${project.title} - Image ${currentImageIndex + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-
+              <div className="w-full md:w-1/2 bg-gray-50 flex flex-col items-center justify-center p-4 md:p-8">
+                <div className="relative w-full flex flex-col items-center">
+                  <div className="w-full flex items-center justify-center">
+                    <Image
+                      src={gallery[currentImageIndex]}
+                      alt={`${project.title} - Image ${currentImageIndex + 1}`}
+                      className="max-h-[50vh] w-auto max-w-full rounded-xl shadow border border-gray-200 bg-white"
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
                   {/* Navigation Arrows */}
                   {gallery.length > 1 && (
                     <>
                       <button
                         onClick={prevImage}
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200"
+                        className="absolute left-2 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200"
+                        style={{ zIndex: 2 }}
                       >
                         <Icon
                           name="ChevronLeft"
@@ -87,7 +90,8 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
                       </button>
                       <button
                         onClick={nextImage}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200"
+                        style={{ zIndex: 2 }}
                       >
                         <Icon
                           name="ChevronRight"
@@ -97,16 +101,38 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
                       </button>
                     </>
                   )}
-
                   {/* Image Counter */}
-                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                  <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
                     {currentImageIndex + 1} / {gallery.length}
                   </div>
                 </div>
+                {/* Optional: Thumbnails */}
+                {gallery.length > 1 && (
+                  <div className="flex gap-2 mt-4 overflow-x-auto">
+                    {gallery.map((img, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentImageIndex(idx)}
+                        className={`border-2 rounded-lg p-1 transition-all duration-200 ${
+                          idx === currentImageIndex
+                            ? "border-primary"
+                            : "border-transparent opacity-70 hover:opacity-100"
+                        }`}
+                        style={{ minWidth: 56, minHeight: 40, background: "#fff" }}
+                      >
+                        <Image
+                          src={img}
+                          alt={`Thumbnail ${idx + 1}`}
+                          className="w-14 h-10 object-contain"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Right Panel - Details */}
-              <div className="w-1/2 flex flex-col">
+              <div className="w-full md:w-1/2 flex flex-col">
                 {/* Tab Content */}
                 <div className="flex-1 overflow-y-auto p-6">
                   {activeTab === "overview" && (
@@ -115,7 +141,7 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
                         <h3 className="text-lg font-semibold mb-3">
                           Project Overview
                         </h3>
-                        <p className="text-gray-600 leading-relaxed">
+                        <p className="text-gray-600 leading-relaxed whitespace-pre-line">
                           {project.fullDescription}
                         </p>
                       </div>
@@ -153,7 +179,7 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
 
                 {/* Footer */}
                 <div className="p-6 border-t border-gray-200">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                     <div className="flex items-center space-x-4">
                       {project.liveUrl && project.liveUrl !== "#" && (
                         <Button

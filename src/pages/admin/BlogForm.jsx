@@ -35,12 +35,10 @@ const BlogForm = () => {
   const categories = [
     { id: "web-dev", name: "Web Development", icon: "Code" },
     { id: "mobile", name: "Mobile Technology", icon: "Smartphone" },
-    { id: "ecommerce", name: "E-commerce Trends", icon: "ShoppingCart" },
     { id: "strategy", name: "Digital Strategy", icon: "Target" },
     { id: "ai-ml", name: "AI & Machine Learning", icon: "Brain" },
     { id: "cybersecurity", name: "Cybersecurity", icon: "Shield" },
     { id: "cloud", name: "Cloud Computing", icon: "Cloud" },
-    { id: "blockchain", name: "Blockchain", icon: "Link" },
   ];
 
   // Custom styles for React Quill

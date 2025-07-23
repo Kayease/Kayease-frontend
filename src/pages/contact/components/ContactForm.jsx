@@ -6,6 +6,7 @@ import { Checkbox } from '../../../components/ui/Checkbox';
 import Icon from '../../../components/AppIcon';
 import { contactApi } from '../../../utils/contactApi';
 import { toast } from 'react-toastify';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -22,6 +23,8 @@ const ContactForm = () => {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState('');
+  const [recaptchaError, setRecaptchaError] = useState('');
 
   const projectTypes = [
     { value: 'web-development', label: 'Web Development' },
@@ -70,6 +73,11 @@ const ContactForm = () => {
     }
   };
 
+  const handleRecaptchaChange = (token) => {
+    setRecaptchaToken(token);
+    setRecaptchaError('');
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
@@ -84,9 +92,12 @@ const ContactForm = () => {
     if (!formData.budget) newErrors.budget = 'Please select a budget range';
     if (!formData.message.trim()) newErrors.message = 'Please describe your project';
     if (!formData.terms) newErrors.terms = 'You must agree to the terms';
+    if (!recaptchaToken) {
+      setRecaptchaError('Please verify that you are not a robot.');
+    }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors).length === 0 && !!recaptchaToken;
   };
 
   const handleSubmit = async (e) => {
@@ -97,7 +108,8 @@ const ContactForm = () => {
     setIsSubmitting(true);
     
     try {
-      const response = await contactApi.submit(formData);
+      // Pass recaptchaToken to your API if needed
+      const response = await contactApi.submit({ ...formData, recaptchaToken });
       
       // Show success toast
       toast.success(response.message || 'Thank you for your inquiry! We\'ll get back to you within 24 hours.');
@@ -131,6 +143,7 @@ const ContactForm = () => {
       }
     } finally {
       setIsSubmitting(false);
+      setRecaptchaToken('');
     }
   };
 
@@ -253,6 +266,18 @@ const ContactForm = () => {
             error={errors.terms}
             required
           />
+        </div>
+
+        {/* reCAPTCHA */}
+        <div>
+          <ReCAPTCHA
+            sitekey={import.meta.env.VITE_GOOGLE_SITE_KEY}
+            onChange={handleRecaptchaChange}
+            theme="light"
+          />
+          {recaptchaError && (
+            <p className="mt-1 text-sm text-destructive">{recaptchaError}</p>
+          )}
         </div>
 
         <div className="pt-4">

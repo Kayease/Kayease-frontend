@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Icon from '../../../components/AppIcon';
 import Image from '../../../components/AppImage';
 import { portfolioApi } from '../../../utils/portfolioApi';
+import ProjectModal from '../../portfolio/components/ProjectModal'; // Import the modal
 
 const PortfolioCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -11,6 +12,8 @@ const PortfolioCarousel = () => {
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalProject, setModalProject] = useState(null);
 
   // Fetch portfolio data on component mount
   useEffect(() => {
@@ -43,7 +46,8 @@ const PortfolioCarousel = () => {
         technologies: portfolio.technologies || [],
         client: portfolio.clientName || 'Client',
         year: new Date(portfolio.createdAt).getFullYear().toString(),
-        slug: portfolio.slug
+        slug: portfolio.slug,
+        ...portfolio // Pass all original fields for modal
       }));
 
       setProjects(transformedProjects);
@@ -56,7 +60,6 @@ const PortfolioCarousel = () => {
     } catch (error) {
       console.error('Error loading portfolio data:', error);
       setError('Failed to load portfolio projects');
-      // Fallback to empty array
       setProjects([]);
     } finally {
       setIsLoading(false);
@@ -81,13 +84,9 @@ const PortfolioCarousel = () => {
   // Helper function to generate metrics from portfolio data
   const generateMetrics = (portfolio) => {
     const metrics = {};
-    
-    // Use actual metrics if available, otherwise generate meaningful ones
     if (portfolio.metrics && Object.keys(portfolio.metrics).length > 0) {
       return portfolio.metrics;
     }
-    
-    // Generate category-specific metrics
     switch (portfolio.category) {
       case 'web-dev':
         metrics.performance = '98%';
@@ -114,7 +113,6 @@ const PortfolioCarousel = () => {
         metrics.delivery = 'On Time';
         metrics.satisfaction = '95%';
     }
-    
     return metrics;
   };
 
@@ -141,6 +139,20 @@ const PortfolioCarousel = () => {
 
   const goToSlide = (index) => {
     setCurrentIndex(index);
+  };
+
+  // Open modal with current project
+  const handleOpenModal = (project) => {
+    setModalProject(project);
+    setModalOpen(true);
+    setIsAutoPlaying(false);
+  };
+
+  // Close modal
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setModalProject(null);
+    setIsAutoPlaying(true);
   };
 
   return (
@@ -218,7 +230,7 @@ const PortfolioCarousel = () => {
                 exit={{ opacity: 0, x: -300 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
                 className="bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer group"
-                onClick={() => window.location.href = `/portfolio/${projects[currentIndex].slug}`}
+                onClick={() => handleOpenModal(projects[currentIndex])}
               >
                 <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[500px]">
                   {/* Project Image */}
@@ -329,6 +341,13 @@ const PortfolioCarousel = () => {
             />
           ))}
         </div>
+
+        {/* Project Modal */}
+        <ProjectModal
+          project={modalProject}
+          isOpen={modalOpen}
+          onClose={handleCloseModal}
+        />
 
         {/* View All Projects CTA */}
         <motion.div
