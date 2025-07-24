@@ -94,22 +94,54 @@ const HeroSection = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 text-center w-full min-h-[600px] flex flex-col justify-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="space-y-8"
+          className="space-y-6 sm:space-y-8"
         >
           {/* Main Headline with Typewriter Effect */}
-          <div className="space-y-4">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-4 sm:mb-6 text-center leading-tight"
-              style={{ color: '#111' }}
+          <div className="space-y-3 sm:space-y-4">
+            <h1
+              className="
+                text-xl
+                xs:text-2xl
+                sm:text-3xl
+                md:text-4xl
+                lg:text-5xl
+                xl:text-6xl
+                font-extrabold
+                mb-2 sm:mb-4
+                text-center
+                leading-tight
+                break-words
+                truncate
+                w-full
+                max-w-full
+              "
+              style={{ color: '#111', wordBreak: 'break-word' }}
             >
-              Unlocking Digital Potential
+              {displayText}
             </h1>
-            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-4 sm:mb-6 text-center leading-relaxed px-4"
-              style={{ color: '#333' }}
+            <h2
+              className="
+                text-sm
+                xs:text-base
+                sm:text-lg
+                md:text-xl
+                lg:text-2xl
+                font-semibold
+                mb-2 sm:mb-4
+                text-center
+                leading-relaxed
+                px-1 sm:px-4
+                break-words
+                truncate
+                w-full
+                max-w-full
+              "
+              style={{ color: '#333', wordBreak: 'break-word' }}
             >
               Smart, Scalable Solutions From Code to Conversions
             </h2>
@@ -120,7 +152,8 @@ const HeroSection = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 3, duration: 0.8 }}
-            className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 max-w-xl sm:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto leading-relaxed px-4"
+            className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 max-w-xs xs:max-w-sm sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto leading-relaxed px-1 sm:px-4 break-words"
+            style={{ wordBreak: 'break-word' }}
           >
             We architect digital ecosystems that scale with your ambition.
             Transform complex challenges into streamlined solutions with
@@ -132,13 +165,13 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 3.5, duration: 0.8 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-6 sm:pt-8 px-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 pt-4 sm:pt-8 px-1 sm:px-4 w-full"
           >
             <Link to="/contact" className="w-full sm:w-auto">
               <Button
                 variant="default"
                 size="lg"
-                className="cta-button text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:min-w-[200px]"
+                className="cta-button text-white font-semibold px-4 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:min-w-[180px]"
                 iconName="ArrowRight"
                 iconPosition="right"
                 iconSize={18}
@@ -151,7 +184,7 @@ const HeroSection = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:min-w-[200px]"
+                className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-semibold px-4 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:min-w-[180px]"
                 iconName="Play"
                 iconPosition="left"
                 iconSize={18}
@@ -166,7 +199,17 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 4, duration: 0.8 }}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 pt-12 sm:pt-16 max-w-sm sm:max-w-2xl lg:max-w-4xl mx-auto px-4"
+            className="
+              grid
+              grid-cols-1
+              xs:grid-cols-2
+              md:grid-cols-4
+              gap-4 sm:gap-6 lg:gap-8
+              pt-6 sm:pt-12 lg:pt-16
+              max-w-xs xs:max-w-sm sm:max-w-2xl lg:max-w-4xl
+              mx-auto px-1 sm:px-4
+              w-full
+            "
           >
             {[
               { number: "150+", label: "Projects Delivered" },
@@ -175,10 +218,10 @@ const HeroSection = () => {
               { number: "24/7", label: "Support Available" },
             ].map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black mb-1 sm:mb-2">
+                <div className="text-lg xs:text-xl sm:text-2xl lg:text-3xl font-bold text-black mb-1 sm:mb-2 truncate">
                   {stat.number}
                 </div>
-                <div className="text-gray-900 text-xs sm:text-sm lg:text-base leading-tight">
+                <div className="text-gray-900 text-xs sm:text-sm lg:text-base leading-tight truncate">
                   {stat.label}
                 </div>
               </div>
@@ -186,23 +229,6 @@ const HeroSection = () => {
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 4.5, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="flex flex-col items-center text-white/70 cursor-pointer"
-        >
-          <span className="text-sm mb-2">Scroll to explore</span>
-          <Icon name="ChevronDown" size={24} />
-        </motion.div>
-      </motion.div>
     </section>
   );
 };
