@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import Icon from '../../../components/AppIcon';
-import Button from '../../../components/ui/Button';
-import Input from '../../../components/ui/Input';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import Icon from "../../../components/AppIcon";
+import Button from "../../../components/ui/Button";
+import Input from "../../../components/ui/Input";
 
 const CTASection = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleNewsletterSubmit = (e) => {
@@ -15,56 +15,56 @@ const CTASection = () => {
       setIsSubmitted(true);
       setTimeout(() => {
         setIsSubmitted(false);
-        setEmail('');
+        setEmail("");
       }, 3000);
     }
   };
 
   const consultationFeatures = [
     {
-      icon: 'Users',
-      title: 'Expert Consultation',
-      description: 'Meet with our senior developers and strategists'
+      icon: "Users",
+      title: "Expert Consultation",
+      description: "Meet with our senior developers and strategists",
     },
     {
-      icon: 'FileText',
-      title: 'Custom Proposal',
-      description: 'Receive a detailed project roadmap and timeline'
+      icon: "FileText",
+      title: "Custom Proposal",
+      description: "Receive a detailed project roadmap and timeline",
     },
     {
-      icon: 'DollarSign',
-      title: 'Transparent Pricing',
-      description: 'Get clear, upfront pricing with no hidden costs'
+      icon: "DollarSign",
+      title: "Transparent Pricing",
+      description: "Get clear, upfront pricing with no hidden costs",
     },
     {
-      icon: 'Clock',
-      title: 'Quick Turnaround',
-      description: 'Start your project within 1-2 weeks'
-    }
+      icon: "Clock",
+      title: "Quick Turnaround",
+      description: "Start your project within 1-2 weeks",
+    },
   ];
 
   const quickActions = [
     {
-      title: 'View Portfolio',
-      description: 'See our latest projects and case studies',
-      icon: 'Briefcase',
-      link: '/portfolio',
-      color: 'from-blue-500 to-cyan-500'
+      title: "View Portfolio",
+      description: "See our latest projects and case studies",
+      icon: "Briefcase",
+      link: "/portfolio",
+      color: "from-blue-500 to-cyan-500",
     },
     {
-      title: 'Our Services',
-      description: 'Explore our comprehensive service offerings',
-      icon: 'Settings',
-      link: '/services',
-      color: 'from-purple-500 to-pink-500'
+      title: "Our Services",
+      description: "Explore our comprehensive service offerings",
+      icon: "Settings",
+      link: "/services",
+      color: "from-purple-500 to-pink-500",
     },
     {
-      title: 'About Us',
-      description: 'Learn about our team and company culture',
-      icon: 'Users',
-      link: '/about',
-      color: 'from-green-500 to-emerald-500'
-    }
+      title: "About Us",
+      description: "Learn about our team and company culture",
+      icon: "Users",
+      link: "/about",
+      color: "from-green-500 to-emerald-500",
+    },
   ];
 
   return (
@@ -85,11 +85,12 @@ const CTASection = () => {
           className="text-center mb-20"
         >
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight px-4">
-            Ready to <span className="brand-gradient-text">Start</span> Your Project?
+            Ready to <span className="brand-gradient-text">Start</span> Your
+            Project?
           </h2>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-100 max-w-xl sm:max-w-2xl lg:max-w-4xl mx-auto leading-relaxed mb-8 sm:mb-12 px-4">
-            Transform your digital vision into reality with Kayease. 
-            Get a free consultation and discover how we can accelerate your growth.
+            Transform your digital vision into reality with Kayease. Get a free
+            consultation and discover how we can accelerate your growth.
           </p>
 
           {/* Primary CTA Buttons */}
@@ -107,8 +108,6 @@ const CTASection = () => {
                 Book Our Services
               </Button>
             </Link>
-
-            
           </div>
         </motion.div>
 
@@ -130,10 +129,10 @@ const CTASection = () => {
               className="text-center group"
             >
               <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-white/20 transition-all duration-300">
-                <Icon 
-                  name={feature.icon} 
-                  size={28} 
-                  color="white" 
+                <Icon
+                  name={feature.icon}
+                  size={28}
+                  color="white"
                   strokeWidth={2}
                 />
               </div>
@@ -146,8 +145,6 @@ const CTASection = () => {
             </motion.div>
           ))}
         </motion.div>
-
-     
 
         {/* Quick Actions */}
         <motion.div
@@ -164,11 +161,13 @@ const CTASection = () => {
                 whileTap={{ scale: 0.95 }}
                 className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center hover:bg-white/20 transition-all duration-300 group cursor-pointer"
               >
-                <div className={`w-16 h-16 bg-gradient-to-br ${action.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon 
-                    name={action.icon} 
-                    size={28} 
-                    color="white" 
+                <div
+                  className={`w-16 h-16 bg-gradient-to-br ${action.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}
+                >
+                  <Icon
+                    name={action.icon}
+                    size={28}
+                    color="white"
                     strokeWidth={2}
                   />
                 </div>
@@ -201,13 +200,16 @@ const CTASection = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
             <div className="flex items-center text-blue-200">
               <Icon name="Phone" size={20} className="mr-3" />
-              <span><a href="tel:+91 9876543210">+91 9876543210</a></span>
+              <span>
+                <a href="tel:+91 9784081045">+91 9784081045</a>
+              </span>
             </div>
             <div className="flex items-center text-blue-200">
               <Icon name="Mail" size={20} className="mr-3" />
-              <span><a href="mailto:Connect@kayease.com">Connect@kayease.com</a></span>
+              <span>
+                <a href="mailto:Team@kayease.com">Team@kayease.com</a>
+              </span>
             </div>
-            
           </div>
         </motion.div>
       </div>

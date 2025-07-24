@@ -16,7 +16,7 @@ import {
   Heart,
 } from "lucide-react";
 // Brand icons from Simple Icons
-import { SiInstagram, SiLinkedin, SiYoutube } from "react-icons/si";
+import { SiInstagram, SiLinkedin, SiYoutube, SiSnapchat } from "react-icons/si"; // <-- Add SiSnapchat
 import { FaXTwitter } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
@@ -45,7 +45,7 @@ const socials = [
   },
   {
     name: "YouTube",
-    url: "https://www.youtube.com/@KayeaseGLOBAL",
+    url: "https://www.youtube.com",
     icon: "Youtube", // Correct Lucide name
     color: "hover:text-red-500",
     bgColor: "hover:bg-red-50",
@@ -146,10 +146,10 @@ const Footer = () => {
                   <Mail size={16} className="text-primary" strokeWidth={2} />
                 </div>
                 <a
-                  href="mailto:Connect@Kayease.com"
+                  href="mailto:team@Kayease.com"
                   className="text-sm text-slate-600 hover:text-primary transition-colors duration-200 hover:underline"
                 >
-                  Connect@Kayease.com
+                  Team@Kayease.com
                 </a>
               </div>
               <div className="flex items-center space-x-3 group">
@@ -308,6 +308,7 @@ const Footer = () => {
 
             {/* Social Links */}
             <div className="flex gap-3 sm:gap-4 mb-4 sm:mb-6 justify-start flex-wrap">
+              {/* Instagram */}
               <a
                 href="https://www.instagram.com/Kayease.global/"
                 target="_blank"
@@ -320,6 +321,7 @@ const Footer = () => {
                   className="text-slate-600 p-1 group-hover:text-pink-500 transition-colors duration-200"
                 />
               </a>
+              {/* Twitter/X */}
               <a
                 href="https://x.com/Kayeaseglobal"
                 target="_blank"
@@ -332,6 +334,7 @@ const Footer = () => {
                   className="text-slate-600 p-1 group-hover:text-blue-400 transition-colors duration-200"
                 />
               </a>
+              {/* LinkedIn */}
               <a
                 href="https://www.linkedin.com/company/kayease/"
                 target="_blank"
@@ -344,8 +347,9 @@ const Footer = () => {
                   className="text-slate-600 p-1 group-hover:text-blue-600 transition-colors duration-200"
                 />
               </a>
+              {/* YouTube */}
               <a
-                href="https://www.youtube.com/@KayeaseGLOBAL"
+                href="https://www.youtube.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
@@ -356,9 +360,20 @@ const Footer = () => {
                   className="text-slate-600 p-1 group-hover:text-red-500 transition-colors duration-200"
                 />
               </a>
+              {/* Snapchat */}
+              <a
+                href="https://www.snapchat.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Snapchat"
+                className="flex items-center justify-center w-12 h-12 rounded-full bg-white border border-slate-200 shadow hover:bg-yellow-50 hover:border-yellow-300 transition-all duration-200 group"
+              >
+                <SiSnapchat
+                  size={28}
+                  className="text-slate-600 p-1 group-hover:text-yellow-400 transition-colors duration-200"
+                />
+              </a>
             </div>
-
-            
           </div>
         </div>
 

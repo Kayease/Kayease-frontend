@@ -111,6 +111,9 @@ const ClientLogos = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="cta-button px-8 py-3 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+            onClick={() =>
+              window.location.href = "/contact"
+            }
           >
             Start Your Project
           </motion.button>

@@ -1,68 +1,80 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Icon from "../../../components/AppIcon";
 import Image from "../../../components/AppImage";
+import { teamApi } from "../../../utils/teamApi";
 
 const TeamSpotlight = () => {
-  const teamImage = {
-    chanda: "/team/chanda.png",
-    pp: "/team/pp.png",
-    rustam: "/team/rustam.png",
-    manish: "/team/manish.png", // fallback since manish.png does not exist
-    sunny: "/team/sunny.png",
-    amit: "/team/amit.png",
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    loadTeamMembers();
+  }, []);
+
+  const loadTeamMembers = async () => {
+    try {
+      setIsLoading(true);
+      const response = await teamApi.getActiveMembers();
+      setTeamMembers(response.teamMembers || []);
+    } catch (error) {
+      console.error("Error loading team members:", error);
+      setError("Failed to load team members");
+      // Fallback to static data if API fails
+      setTeamMembers([
+        {
+          _id: 1,
+          name: "Sunny Dhalia",
+          role: "Chief Technical Officer",
+          expertise: ["Team Leadership", "Innovation Strategy"],
+          experience: "15+ years",
+          avatar: "/team/sunny.png",
+        },
+        {
+          _id: 2,
+          name: "Amit Trivedi",
+          role: "Chief Operations Officer",
+          expertise: ["Workflow Automation", "Strategic Operations"],
+          experience: "12+ years",
+          avatar: "/team/amit.png",
+        },
+        {
+          _id: 3,
+          name: "Chanda Kumawat",
+          role: "Business Analyst",
+          expertise: ["Data Analysis", "Market Research"],
+          experience: "1+ years",
+          avatar: "/team/chanda.png",
+        },
+        {
+          _id: 4,
+          name: "Rustam Khan",
+          role: "Full-Stack Developer",
+          expertise: ["React Development", "Full-Stack Development"],
+          experience: "4+ years",
+          avatar: "/team/rustam.png",
+        },
+        {
+          _id: 5,
+          name: "Pradeependra Pratap",
+          role: "Backend Developer",
+          expertise: ["Code Optimization", "Backend Development"],
+          experience: "4+ years",
+          avatar: "/team/pp.png",
+        },
+        {
+          _id: 6,
+          name: "Manish Kumar",
+          role: "Backend Developer",
+          expertise: ["Django Framework", "PHP Development"],
+          experience: "5+ years",
+          avatar: "/team/manish.png",
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
   };
-
-  const teamMembers = [
-    {
-      id: 1,
-      name: "Sunny Dhalia",
-      role: "Chief Technical Officer",
-      expertise: ["Team Leadership", "Innovation Strategy"],
-      experience: " 15 + years",
-      avatar: teamImage.sunny,
-    },
-    {
-      id: 2,
-      name: "Amit Trivedi",
-      role: "Chief Operations Officer",
-      expertise: ["Workflow Automation", "Strategic Operations"],
-      experience: " 12 + years",
-      avatar: teamImage.amit,
-    },
-    {
-      id: 3,
-      name: "Chanda Kumawat",
-      role: "Bussiness Analyst",
-      expertise: ["Data Analysis", "Market Research"],
-      experience: " 1 + years",
-      avatar: teamImage.chanda,
-    },
-    {
-      id: 4,
-      name: "Rustam Khan",
-      role: "Full-Stack Developer",
-      expertise: ["React Development", "Full-Stack Development"],
-      experience: " 4 + years",
-      avatar: teamImage.rustam,
-    },
-    {
-      id: 5,
-      name: "Pradeependra Pratap",
-      role: "Backend Developer",
-      expertise: ["Code Optimization", "Backed Development"],
-      experience: " 4 + years",
-      avatar: teamImage.pp,
-    },
-
-    {
-      id: 6,
-      name: "Manish Kumar",
-      role: "Backend Developer",
-      expertise: ["Jango Framework", "PHP Development"],
-      experience: " 5 + years",
-      avatar: teamImage.manish,
-    },
-  ];
 
   return (
     <section className="py-10 sm:py-14 lg:py-18 xl:py-20 xxl:py-24 bg-white">
@@ -93,7 +105,11 @@ const TeamSpotlight = () => {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4 lg:gap-6 xl:gap-8">
             {[
-              { number: "15+", label: "Team Members", icon: "Users" },
+              {
+                number: `${teamMembers.length}+`,
+                label: "Team Members",
+                icon: "Users",
+              },
               { number: "50+", label: "Certifications", icon: "Award" },
               { number: "15+", label: "Technologies Mastered", icon: "Code" },
               { number: "5+", label: "Key Roles", icon: "Briefcase" },
@@ -113,71 +129,80 @@ const TeamSpotlight = () => {
           </div>
         </div>
 
-        {/* Key Roles */}
-        <div className="mb-8">
-          <h4 className="text-base font-bold text-slate-900 text-center mb-3">
-            Key Roles to Showcase
-          </h4>
-          <div className="flex flex-wrap justify-center gap-2 mb-4">
-            {[
-              "Campaign Strategist",
-              "SEO/Ads Specialist",
-              "UX/UI Designer",
-              "Full-Stack Developer",
-              "Product Manager",
-            ].map((role, idx) => (
-              <span
-                key={idx}
-                className="px-3 py-1 bg-blue-50 text-primary text-xs font-medium rounded-full shadow"
-              >
-                {role}
-              </span>
-            ))}
-          </div>
-        </div>
-
         {/* Team Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {teamMembers.map((member) => (
-            <div
-              key={member.id}
-              className="bg-white rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 cursor-pointer overflow-hidden"
-            >
-              <div>
-                <div className="relative">
-                  <Image
-                    src={member.avatar}
-                    alt={member.name}
-                    className="w-full h-72 object-cover object-top"
-                  />
-                  {/* <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div> */}
-                </div>
+          {isLoading ? (
+            // Loading skeleton
+            Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse"
+              >
+                <div className="w-full h-72 bg-slate-200"></div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold text-slate-900 mb-1">
-                    {member.name}
-                  </h3>
-                  <p className="text-primary font-medium mb-4">{member.role}</p>
-                  {/* Experience Badge */}
-                  <div className="mb-4">
-                    <span className="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                      {member.experience} Experience
-                    </span>
-                  </div>
-                  {/* Expertise Tags */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {member.expertise.slice(0, 2).map((skill, index) => (
-                      <span
-                        key={index}
-                        className="px-3 py-1 bg-blue-50 text-primary text-xs font-medium rounded-full"
-                      >
-                        {skill}
-                      </span>
-                    ))}
+                  <div className="h-6 bg-slate-200 rounded mb-2"></div>
+                  <div className="h-4 bg-slate-200 rounded mb-4 w-3/4"></div>
+                  <div className="h-6 bg-slate-200 rounded mb-4 w-1/2"></div>
+                  <div className="flex gap-2">
+                    <div className="h-6 bg-slate-200 rounded w-20"></div>
+                    <div className="h-6 bg-slate-200 rounded w-24"></div>
                   </div>
                 </div>
               </div>
+            ))
+          ) : teamMembers.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <Icon
+                name="Users"
+                size={48}
+                className="text-slate-300 mx-auto mb-4"
+              />
+              <p className="text-slate-600">No team members found</p>
             </div>
-          ))}
+          ) : (
+            teamMembers.map((member) => (
+              <div
+                key={member._id || member.id}
+                className="bg-white rounded-2xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 cursor-pointer overflow-hidden"
+              >
+                <div>
+                  <div className="relative">
+                    <Image
+                      src={member.avatar}
+                      alt={member.name}
+                      className="w-full h-72 object-cover object-center"
+                    />
+                    {/* <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div> */}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-slate-900 mb-1">
+                      {member.name}
+                    </h3>
+                    <p className="text-primary font-medium mb-4">
+                      {member.role}
+                    </p>
+                    {/* Experience Badge */}
+                    <div className="mb-4">
+                      <span className="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                        {member.experience} Experience
+                      </span>
+                    </div>
+                    {/* Expertise Tags */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {member.expertise.slice(0, 2).map((skill, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-blue-50 text-primary text-xs font-medium rounded-full"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
         <div className="text-center mt-16">
           <div className="bg-white rounded-2xl p-8 shadow-xl border border-slate-200">

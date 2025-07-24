@@ -28,6 +28,8 @@ import PortfolioDetail from "pages/portfolio/PortfolioDetail";
 import ClientForm from "pages/admin/ClientForm";
 import ClientList from "pages/admin/ClientList";
 import ContactManagement from "pages/admin/ContactManagement";
+import TeamManagement from "pages/admin/TeamManagement";
+import TeamForm from "pages/admin/TeamForm";
 import NotFound from "pages/NotFound";
 import Header from "components/ui/Header";
 import Footer from "components/ui/Footer";
@@ -178,6 +180,30 @@ const AppLayout = () => {
           element={
             <ProtectedRoute>
               <ContactManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/team"
+          element={
+            <ProtectedRoute>
+              <TeamManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/team/create"
+          element={
+            <ProtectedRoute>
+              <TeamForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/team/edit/:id"
+          element={
+            <ProtectedRoute>
+              <TeamForm />
             </ProtectedRoute>
           }
         />

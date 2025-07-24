@@ -46,7 +46,7 @@ const CareersPage = () => {
     totalJobs: 0,
     totalDepartments: 0,
     teamMembers: 50,
-    satisfaction: 95
+    satisfaction: 95,
   });
 
   useEffect(() => {
@@ -122,11 +122,13 @@ const CareersPage = () => {
           other: "bg-gray-500",
         };
 
-        const transformedDepartments = statsResponse.departments.map((dept) => ({
-          name: dept._id.charAt(0).toUpperCase() + dept._id.slice(1),
-          count: dept.activeCount || dept.count,
-          color: departmentColors[dept._id] || "bg-gray-500",
-        }));
+        const transformedDepartments = statsResponse.departments.map(
+          (dept) => ({
+            name: dept._id.charAt(0).toUpperCase() + dept._id.slice(1),
+            count: dept.activeCount || dept.count,
+            color: departmentColors[dept._id] || "bg-gray-500",
+          })
+        );
 
         setDepartments(transformedDepartments);
       }
@@ -136,7 +138,7 @@ const CareersPage = () => {
         totalJobs: statsResponse.overview?.total || 0,
         totalDepartments: statsResponse.departments?.length || 0,
         teamMembers: 50, // Keep static for now
-        satisfaction: 95 // Keep static for now
+        satisfaction: 95, // Keep static for now
       });
     } catch (error) {
       console.error("Error loading careers:", error);
@@ -342,25 +344,33 @@ const CareersPage = () => {
               <div className="text-2xl sm:text-3xl md:text-4xl font-bold brand-gradient-text mb-1 sm:mb-2">
                 {stats.teamMembers}+
               </div>
-              <div className="text-slate-600 text-xs sm:text-sm leading-tight">Team Members</div>
+              <div className="text-slate-600 text-xs sm:text-sm leading-tight">
+                Team Members
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl sm:text-3xl md:text-4xl font-bold brand-gradient-text mb-1 sm:mb-2">
                 {stats.totalDepartments}
               </div>
-              <div className="text-slate-600 text-xs sm:text-sm leading-tight">Departments</div>
+              <div className="text-slate-600 text-xs sm:text-sm leading-tight">
+                Departments
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl sm:text-3xl md:text-4xl font-bold brand-gradient-text mb-1 sm:mb-2">
                 {stats.totalJobs}
               </div>
-              <div className="text-slate-600 text-xs sm:text-sm leading-tight">Open Positions</div>
+              <div className="text-slate-600 text-xs sm:text-sm leading-tight">
+                Open Positions
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl sm:text-3xl md:text-4xl font-bold brand-gradient-text mb-1 sm:mb-2">
                 {stats.satisfaction}%
               </div>
-              <div className="text-slate-600 text-xs sm:text-sm leading-tight">Employee Satisfaction</div>
+              <div className="text-slate-600 text-xs sm:text-sm leading-tight">
+                Employee Satisfaction
+              </div>
             </div>
           </div>
         </div>
@@ -422,13 +432,6 @@ const CareersPage = () => {
           </div>
         </div>
       </section>
-
-      {/* Debug Section - Remove this later */}
-      <div className="bg-yellow-100 p-4 text-sm border-l-4 border-yellow-500">
-        <strong>Debug Info:</strong> Jobs: {jobOpenings.length}, Departments: {departments.length}, Loading: {isLoading.toString()}, Error: {error || 'none'}
-        <br />
-        <strong>Filtered Jobs:</strong> {filteredJobs.length} (Selected Dept: {selectedDepartment})
-      </div>
 
       {/* Job Openings Section */}
       <section className="py-20 bg-gradient-to-br from-slate-50 to-white">
@@ -625,7 +628,6 @@ const CareersPage = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-primary to-secondary relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute top-10 left-1/4 w-6 h-6 bg-white/20 rounded-full geometric-float"></div>
@@ -650,20 +652,12 @@ const CareersPage = () => {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               <Button
-                variant="secondary"
-                size="lg"
-                className="bg-white text-primary hover:bg-white/90 font-medium"
-                iconName="Send"
-                iconPosition="right"
-              >
-                Send Your Resume
-              </Button>
-              <Button
                 variant="outline"
                 size="lg"
                 className="border-white text-white hover:bg-white/10"
                 iconName="Mail"
                 iconPosition="left"
+                onClick={() => navigate("/contact")}
               >
                 Contact HR Team
               </Button>

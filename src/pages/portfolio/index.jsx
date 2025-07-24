@@ -298,57 +298,6 @@ const Portfolio = () => {
         {/* Client Logos */}
         <ClientLogos />
 
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-br from-primary to-secondary">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-4xl font-bold text-white mb-6"
-            >
-              Ready to Start Your Success Story?
-            </motion.h2>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="text-xl text-white/90 mb-8"
-            >
-              Let's discuss how we can help transform your digital presence and
-              achieve your business goals
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            >
-              <Button
-                variant="secondary"
-                className="bg-white text-primary hover:bg-gray-50"
-                iconName="MessageSquare"
-                iconPosition="left"
-              >
-                Start a Conversation
-              </Button>
-
-              <Button
-                variant="ghost"
-                className="text-white border-white hover:bg-white/10"
-                iconName="Calendar"
-                iconPosition="left"
-              >
-                Schedule Consultation
-              </Button>
-            </motion.div>
-          </div>
-        </section>
-
         {/* Project Modal */}
         <ProjectModal
           project={selectedProject}

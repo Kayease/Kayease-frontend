@@ -155,12 +155,12 @@ const SocialProof = () => {
         >
           {[
             {
-              number: stats.totalClients > 0 ? `${stats.totalClients}+` : "0",
+              number: "150+",
               label: "Trusted Clients",
               icon: "Users",
             },
             {
-              number: stats.recentClients > 0 ? `${stats.recentClients}+` : "0",
+              number:"30+",
               label: "New This Month",
               icon: "TrendingUp",
             },
@@ -170,7 +170,7 @@ const SocialProof = () => {
               icon: "Clock",
             },
             {
-              number: "5+",
+              number: "15+",
               label: "Years Experience",
               icon: "Award",
             },

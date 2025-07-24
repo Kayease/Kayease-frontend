@@ -35,7 +35,9 @@ const HeroSection = () => {
           </h2>
           {/* Description */}
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-600 mb-6 sm:mb-8 lg:mb-10 leading-relaxed max-w-xl sm:max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto px-4">
-            We help businesses grow through powerful digital marketing, innovative websites, and high-performing apps. From brand awareness to user experience, we deliver complete digital solutions.
+            We help businesses grow through powerful digital marketing,
+            innovative websites, and high-performing apps. From brand awareness
+            to user experience, we deliver complete digital solutions.
           </p>
 
           {/* Stats */}
@@ -43,7 +45,7 @@ const HeroSection = () => {
             {[
               { number: "150+", label: "Projects Delivered" },
               { number: "50+", label: "Happy Clients" },
-              { number: "5+", label: "Years in Tech & Marketing" },
+              { number: "15+", label: "Years in Tech & Marketing" },
               { number: "24/7", label: "Client Success Support" },
             ].map((stat, index) => (
               <div key={index} className="text-center">
@@ -72,8 +74,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-
-    
     </section>
   );
 };

@@ -226,6 +226,7 @@ const WhyKayease = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="inline-flex items-center space-x-2 bg-white text-primary font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              onClick={() => window.location.href = "mailto:Team@kayease.com"}
             >
               <span>Schedule Free Consultation</span>
               <Icon name="Calendar" size={20} />

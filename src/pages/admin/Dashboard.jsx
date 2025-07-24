@@ -3,19 +3,20 @@ import { useNavigate, Link } from "react-router-dom";
 import Icon from "../../components/AppIcon";
 import Button from "../../components/ui/Button";
 import { logout, isAuthenticated } from "../../utils/auth";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { blogApi } from "../../utils/blogApi";
 import { careerApi } from "../../utils/careerApi";
 import { portfolioApi } from "../../utils/portfolioApi";
 import { clientApi } from "../../utils/clientApi";
 import { contactApi } from "../../utils/contactApi";
+import { teamApi } from "../../utils/teamApi";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingStats, setIsLoadingStats] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [lastUpdated, setLastUpdated] = useState(null);
   const [stats, setStats] = useState({
     blogs: {
@@ -61,6 +62,12 @@ const Dashboard = () => {
       closed: 0,
       thisMonth: 0,
     },
+    team: {
+      total: 0,
+      active: 0,
+      inactive: 0,
+      thisMonth: 0,
+    },
     overview: {
       totalViews: "0",
       totalUsers: "0",
@@ -77,12 +84,12 @@ const Dashboard = () => {
       setUser(authUser);
       setIsLoading(false);
       loadDashboardStats();
-      
+
       // Set up auto-refresh every 5 minutes
       const refreshInterval = setInterval(() => {
         loadDashboardStats();
       }, 5 * 60 * 1000); // 5 minutes
-      
+
       return () => clearInterval(refreshInterval);
     } else {
       console.error("No authenticated user found in Dashboard");
@@ -92,26 +99,78 @@ const Dashboard = () => {
 
   const loadDashboardStats = async () => {
     setIsLoadingStats(true);
-    setError('');
-    
+    setError("");
+
     try {
       // Load stats from all APIs in parallel
-      const [blogStats, careerStats, portfolioStats, clientStats, contactStats] = await Promise.allSettled([
-        blogApi.getStats().catch(() => ({ totalBlogs: 0, publishedBlogs: 0, draftBlogs: 0, featuredBlogs: 0 })),
-        careerApi.getStats().catch(() => ({ totalCareers: 0, activeCareers: 0, pausedCareers: 0, closedCareers: 0 })),
-        portfolioApi.getStats().catch(() => ({ totalProjects: 0, completedProjects: 0, inProgressProjects: 0, featuredProjects: 0 })),
-        clientApi.getStats().catch(() => ({ totalClients: 0, activeClients: 0 })),
-        contactApi.getStats().catch(() => ({ overview: { total: 0, new: 0, contacted: 0, inProgress: 0, closed: 0 }, thisMonth: 0 }))
+      const [
+        blogStats,
+        careerStats,
+        portfolioStats,
+        clientStats,
+        contactStats,
+        teamStats,
+      ] = await Promise.allSettled([
+        blogApi
+          .getStats()
+          .catch(() => ({
+            totalBlogs: 0,
+            publishedBlogs: 0,
+            draftBlogs: 0,
+            featuredBlogs: 0,
+          })),
+        careerApi
+          .getStats()
+          .catch(() => ({
+            totalCareers: 0,
+            activeCareers: 0,
+            pausedCareers: 0,
+            closedCareers: 0,
+          })),
+        portfolioApi
+          .getStats()
+          .catch(() => ({
+            totalProjects: 0,
+            completedProjects: 0,
+            inProgressProjects: 0,
+            featuredProjects: 0,
+          })),
+        clientApi
+          .getStats()
+          .catch(() => ({ totalClients: 0, activeClients: 0 })),
+        contactApi
+          .getStats()
+          .catch(() => ({
+            overview: {
+              total: 0,
+              new: 0,
+              contacted: 0,
+              inProgress: 0,
+              closed: 0,
+            },
+            thisMonth: 0,
+          })),
+        teamApi
+          .getStats()
+          .catch(() => ({
+            overview: { total: 0, active: 0, inactive: 0 },
+            thisMonthMembers: 0,
+          })),
       ]);
 
       // Process blog stats
-      const blogData = blogStats.status === 'fulfilled' ? blogStats.value : {};
-      const careerData = careerStats.status === 'fulfilled' ? careerStats.value : {};
-      const portfolioData = portfolioStats.status === 'fulfilled' ? portfolioStats.value : {};
-      const clientData = clientStats.status === 'fulfilled' ? clientStats.value : {};
-      const contactData = contactStats.status === 'fulfilled' ? contactStats.value : {};
+      const blogData = blogStats.status === "fulfilled" ? blogStats.value : {};
+      const careerData =
+        careerStats.status === "fulfilled" ? careerStats.value : {};
+      const portfolioData =
+        portfolioStats.status === "fulfilled" ? portfolioStats.value : {};
+      const clientData =
+        clientStats.status === "fulfilled" ? clientStats.value : {};
+      const contactData =
+        contactStats.status === "fulfilled" ? contactStats.value : {};
+      const teamData = teamStats.status === "fulfilled" ? teamStats.value : {};
 
-      setStats(prevStats => ({
+      setStats((prevStats) => ({
         ...prevStats,
         blogs: {
           total: blogData.totalBlogs || 0,
@@ -156,25 +215,34 @@ const Dashboard = () => {
           closed: contactData.overview?.closed || 0,
           thisMonth: contactData.thisMonth || 0,
         },
+        team: {
+          total: teamData.overview?.total || 0,
+          active: teamData.overview?.active || 0,
+          inactive: teamData.overview?.inactive || 0,
+          thisMonth: teamData.thisMonthMembers || 0,
+        },
         overview: {
           totalViews: formatNumber(
-            (blogData.totalViews || 0) + 
-            (careerData.totalViews || 0) + 
-            (portfolioData.totalViews || 0) + 
-            (clientData.totalViews || 0)
+            (blogData.totalViews || 0) +
+              (careerData.totalViews || 0) +
+              (portfolioData.totalViews || 0) +
+              (clientData.totalViews || 0)
           ),
           totalUsers: formatNumber(
-            (blogData.totalUsers || 0) + 
-            (careerData.totalUsers || 0)
+            (blogData.totalUsers || 0) + (careerData.totalUsers || 0)
           ),
-          conversionRate: calculateConversionRate(careerData.totalApplications || 0, careerData.totalViews || 0),
+          conversionRate: calculateConversionRate(
+            careerData.totalApplications || 0,
+            careerData.totalViews || 0
+          ),
           avgSessionTime: "4m 32s", // This would come from analytics
         },
       }));
-
     } catch (error) {
-      console.error('Error loading dashboard stats:', error);
-      setError('Failed to load dashboard statistics. Some data may be unavailable.');
+      console.error("Error loading dashboard stats:", error);
+      setError(
+        "Failed to load dashboard statistics. Some data may be unavailable."
+      );
     } finally {
       setIsLoadingStats(false);
       setLastUpdated(new Date());
@@ -184,9 +252,9 @@ const Dashboard = () => {
   // Helper function to format numbers
   const formatNumber = (num) => {
     if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + 'M';
+      return (num / 1000000).toFixed(1) + "M";
     } else if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'K';
+      return (num / 1000).toFixed(1) + "K";
     }
     return num.toString();
   };
@@ -253,6 +321,15 @@ const Dashboard = () => {
       color: "bg-indigo-500",
       count: stats.contacts.total,
       route: "/admin/contacts",
+    },
+    {
+      id: "team",
+      title: "Team Management",
+      description: "Add and manage team members and their profiles",
+      icon: "UserCheck",
+      color: "bg-orange-500",
+      count: stats.team.total,
+      route: "/admin/team",
     },
   ];
 
@@ -332,8 +409,8 @@ const Dashboard = () => {
                 Welcome back, {user.name}!
               </h2>
               <p className="text-slate-600">
-                Manage your content and monitor your website's performance from this
-                dashboard.
+                Manage your content and monitor your website's performance from
+                this dashboard.
               </p>
             </div>
             <div className="flex items-center space-x-4">
@@ -350,12 +427,16 @@ const Dashboard = () => {
               )}
             </div>
           </div>
-          
+
           {/* Error Display */}
           {error && (
             <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
               <div className="flex items-center">
-                <Icon name="AlertTriangle" size={20} className="text-yellow-600 mr-3" />
+                <Icon
+                  name="AlertTriangle"
+                  size={20}
+                  className="text-yellow-600 mr-3"
+                />
                 <p className="text-yellow-800">{error}</p>
                 <Button
                   variant="ghost"
@@ -378,7 +459,11 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative">
             {isLoadingStats && (
               <div className="absolute inset-0 bg-white/80 rounded-xl flex items-center justify-center">
-                <Icon name="Loader2" size={20} className="animate-spin text-primary" />
+                <Icon
+                  name="Loader2"
+                  size={20}
+                  className="animate-spin text-primary"
+                />
               </div>
             )}
             <div className="flex items-center justify-between mb-4">
@@ -440,7 +525,11 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative">
             {isLoadingStats && (
               <div className="absolute inset-0 bg-white/80 rounded-xl flex items-center justify-center">
-                <Icon name="Loader2" size={20} className="animate-spin text-primary" />
+                <Icon
+                  name="Loader2"
+                  size={20}
+                  className="animate-spin text-primary"
+                />
               </div>
             )}
             <div className="flex items-center justify-between mb-4">
@@ -502,7 +591,11 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative">
             {isLoadingStats && (
               <div className="absolute inset-0 bg-white/80 rounded-xl flex items-center justify-center">
-                <Icon name="Loader2" size={20} className="animate-spin text-primary" />
+                <Icon
+                  name="Loader2"
+                  size={20}
+                  className="animate-spin text-primary"
+                />
               </div>
             )}
             <div className="flex items-center justify-between mb-4">
@@ -570,7 +663,11 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative">
             {isLoadingStats && (
               <div className="absolute inset-0 bg-white/80 rounded-xl flex items-center justify-center">
-                <Icon name="Loader2" size={20} className="animate-spin text-primary" />
+                <Icon
+                  name="Loader2"
+                  size={20}
+                  className="animate-spin text-primary"
+                />
               </div>
             )}
             <div className="flex items-center justify-between mb-4">
@@ -583,9 +680,7 @@ const Dashboard = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-800">
-                    Clients
-                  </h3>
+                  <h3 className="font-semibold text-slate-800">Clients</h3>
                   <p className="text-2xl font-bold text-slate-800">
                     {stats.clients.total}
                   </p>
@@ -638,17 +733,17 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative">
             {isLoadingStats && (
               <div className="absolute inset-0 bg-white/80 rounded-xl flex items-center justify-center">
-                <Icon name="Loader2" size={20} className="animate-spin text-primary" />
+                <Icon
+                  name="Loader2"
+                  size={20}
+                  className="animate-spin text-primary"
+                />
               </div>
             )}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                  <Icon
-                    name="Mail"
-                    size={20}
-                    className="text-indigo-600"
-                  />
+                  <Icon name="Mail" size={20} className="text-indigo-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-slate-800">
@@ -711,6 +806,70 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* Team Statistics */}
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative">
+            {isLoadingStats && (
+              <div className="absolute inset-0 bg-white/80 rounded-xl flex items-center justify-center">
+                <Icon
+                  name="Loader2"
+                  size={20}
+                  className="animate-spin text-primary"
+                />
+              </div>
+            )}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <Icon name="UserCheck" size={20} className="text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-800">Team Members</h3>
+                  <p className="text-2xl font-bold text-slate-800">
+                    {stats.team.total}
+                  </p>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/admin/team")}
+                iconName="ArrowRight"
+                iconPosition="right"
+                iconSize={14}
+              >
+                Manage
+              </Button>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-slate-600">Active</span>
+                </div>
+                <span className="font-medium text-slate-800">
+                  {stats.team.active}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                  <span className="text-slate-600">Inactive</span>
+                </div>
+                <span className="font-medium text-slate-800">
+                  {stats.team.inactive}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span className="text-slate-600">Added This Month</span>
+                </div>
+                <span className="font-medium text-slate-800">
+                  {stats.team.thisMonth}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Quick Actions & Content Management */}
@@ -753,15 +912,25 @@ const Dashboard = () => {
                   Add Project
                 </Button>
                 <Button
-                variant="outline"
-                className="w-full bg-white hover:bg-green-500 hover:text-white border border-green-500 shadow-none"
-                onClick={() => navigate("/admin/clients/new")}
-                iconName="UserPlus"
-                iconPosition="left"
-                iconSize={16}
-              >
-                Add Client
-              </Button>
+                  variant="outline"
+                  className="w-full bg-white hover:bg-green-500 hover:text-white border border-green-500 shadow-none"
+                  onClick={() => navigate("/admin/clients/new")}
+                  iconName="UserPlus"
+                  iconPosition="left"
+                  iconSize={16}
+                >
+                  Add Client
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full bg-white hover:bg-green-500 hover:text-white border border-green-500 shadow-none"
+                  onClick={() => navigate("/admin/team/create")}
+                  iconName="UserPlus"
+                  iconPosition="left"
+                  iconSize={16}
+                >
+                  Add Member
+                </Button>
               </div>
             </div>
           </div>

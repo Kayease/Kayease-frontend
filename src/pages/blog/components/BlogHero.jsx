@@ -32,20 +32,6 @@ const BlogHero = () => {
             Discover the latest trends, technical deep-dives, and strategic
             insights that drive digital transformation success.
           </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
-            <Button
-              variant="default"
-              className="cta-button text-white font-medium w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg"
-              iconName="Mail"
-              iconPosition="left"
-              iconSize={16}
-              onClick={() => navigate("/blog")}
-            >
-              Explore Topics
-            </Button>
-          </div>
         </div>
       </div>
     </section>

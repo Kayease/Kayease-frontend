@@ -119,42 +119,7 @@ const ServicesPreview = () => {
                       </span>
                     ))}
                   </div>
-
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                    <span className="text-sm text-text-secondary font-medium">
-                      {service.projects}
-                    </span>
-                    <Icon
-                      name="ArrowRight"
-                      size={16}
-                      className="text-primary group-hover:translate-x-1 transition-transform duration-300"
-                    />
-                  </div>
                 </div>
-
-                {/* Hover Overlay */}
-                {/* <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{
-                    opacity: hoveredService === service.id ? 1 : 0,
-                    scale: hoveredService === service.id ? 1 : 0.8,
-                  }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute inset-0 bg-gradient-to-br from-primary/90 to-secondary/90 rounded-2xl flex items-center justify-center"
-                >
-                  <div className="text-center text-white">
-                    <Icon
-                      name={service.icon}
-                      size={48}
-                      color="white"
-                      className="mx-auto mb-4"
-                    />
-                    <h4 className="text-lg font-bold mb-2">Learn More</h4>
-                    <p className="text-sm opacity-90">
-                      Discover our {service.title.toLowerCase()} solutions
-                    </p>
-                  </div>
-                </motion.div> */}
               </div>
             </motion.div>
           ))}
